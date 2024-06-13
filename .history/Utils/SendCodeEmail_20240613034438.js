@@ -23,7 +23,9 @@ function sendCode(toEmail, randomCode) {
 
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-      
+      res
+      .status(200)
+      .json({ status: "success", massage: "Rest Code Sent successfully" });
       return console.log("Error sending email:", error);
     }
     console.log("Email sent: " + info.response);
