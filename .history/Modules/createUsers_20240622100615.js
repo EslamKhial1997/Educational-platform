@@ -55,7 +55,7 @@ const createUsers = new mongoose.Schema(
     },
     history: [
       {
-        from: {
+        to: {
           type:String,
         },
         to: {

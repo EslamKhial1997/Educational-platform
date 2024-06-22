@@ -54,19 +54,9 @@ const createUsers = new mongoose.Schema(
       default: "user",
     },
     history: [
-      {
-        from: {
-          type:String,
-        },
-        to: {
-          type:String,
-        },
-        point: String,
-        history: {
-          type: Date,
-          default: new Date(),
-        },
-      },
+      type: String,
+      enum: ["user", "teacher", "admin", "manager"],
+      default: "user",
     ],
     grade: {
       type: String,

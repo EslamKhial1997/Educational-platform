@@ -109,8 +109,7 @@ exports.updateUserPoint = expressAsyncHandler(async (req, res, next) => {
     next(
       new ApiError(`Sorry Can't Update This ID From ID :${req.params.id}`, 404)
     );
-    userLogged.point = +req.user.point - +req.body.point;
-  console.log(userLogged.point);
+  req.user.point = +req.user.point - +req.body.point;
   const totalPoint = +req.body.point + +updateDocById.point;
   updateDocById.point = totalPoint;
   await userLogged.history.push({

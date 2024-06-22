@@ -55,11 +55,9 @@ const createUsers = new mongoose.Schema(
     },
     history: [
       {
-        from: {
-          type:String,
-        },
         to: {
-          type:String,
+          type: mongoose.Schema.ObjectId,
+          ref: "Users",
         },
         point: String,
         history: {
@@ -106,6 +104,13 @@ createUsers.post("init", (doc) => {
 });
 createUsers.post("save", (doc) => {
   ImageURL(doc);
+});
+createUsers.pre(/^find/, function (next) {
+  this.populate({
+    path: "to",
+    select: "username email",
+  });
+  next();
 });
 const createUsersModel = mongoose.model("Users", createUsers);
 module.exports = createUsersModel;

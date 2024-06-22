@@ -91,7 +91,6 @@ exports.getUsers = factory.getAll(createUsersModel);
 exports.getUser = factory.getOne(createUsersModel);
 exports.updateUserPoint = expressAsyncHandler(async (req, res, next) => {
   const updateDocById = await createUsersModel.findById(req.params.id);
-  const userLogged = await createUsersModel.findById(req.user._id);
   if (updateDocById.role === "user" && req.user.role === "manager") {
     return Promise.reject(new Error("Sorry You Not Allowed To Update Points"));
   }
@@ -109,25 +108,14 @@ exports.updateUserPoint = expressAsyncHandler(async (req, res, next) => {
     next(
       new ApiError(`Sorry Can't Update This ID From ID :${req.params.id}`, 404)
     );
-    userLogged.point = +req.user.point - +req.body.point;
-  console.log(userLogged.point);
-  const totalPoint = +req.body.point + +updateDocById.point;
-  updateDocById.point = totalPoint;
-  await userLogged.history.push({
-    from:userLogged.email,
-    to: updateDocById.email,
-    point: req.body.point,
-    history: Date.now(),
-  });
-  await updateDocById.history.push({
-    from: userLogged.email,
-    to: updateDocById.email,
-    point: req.body.point,
-    history: Date.now(),
-  });
-
-  await userLogged.save();
-  await updateDocById.save();
+  req.user.point = req.user.point - req.body.point;
+  const totalPoint = req.body.point + updateDocById.point;
+  const digits = totalPoint.toString().split('').map(Number);
+  const result = digits.reduce((sum, digit) => sum + digit, 0);
+  updateDocById.point = result
+  console.log(updateDocById);
+  await updateDocById.history.push({ to:req.params.id, point, price: productModel.price });
+  await updateDocById.save()
   res.status(200).json({ data: updateDocById });
 });
 // exports.deleteUser = factory.deleteOne(createUsersModel);

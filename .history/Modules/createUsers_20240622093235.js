@@ -55,11 +55,9 @@ const createUsers = new mongoose.Schema(
     },
     history: [
       {
-        from: {
-          type:String,
-        },
         to: {
           type:String,
+          ref: "Users",
         },
         point: String,
         history: {
