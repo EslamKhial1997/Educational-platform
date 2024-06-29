@@ -1,0 +1,21 @@
+const multer = require("multer");
+const ApiError = require("../Resuble/ApiErrors");
+const { createTeachersValidator } = require("../Resuble/TeachersvalidatorError");
+
+
+const MulterOptions = async(Model) => {
+ aw createTeachersValidator
+  const storage = multer.memoryStorage();
+  const multerFilter = function (req, file, cb) {
+    if (file.mimetype.startsWith("image")) {
+      cb(null, true);
+    } else {
+      cb(new ApiError("Only Image Allowed", 400), false);
+    }
+  };
+  const upload = multer({ storage: storage, fileFilter: multerFilter });
+  return upload;
+};
+
+// exports.UploadSingleImage = (ImageName) => MulterOptions().single(ImageName);
+exports.UploadMultiImage = (ArrOfImage ,Model) => MulterOptions(Model).fields(ArrOfImage);
