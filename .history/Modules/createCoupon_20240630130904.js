@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const createCoupons = new mongoose.Schema(
   {
-    code:String,
+    code:,
     discount:Number,
     expires: {
       type: String,

@@ -11,6 +11,23 @@ const ApiError = require("../Resuble/ApiErrors");
 const createCouponsModel = require("../Modules/createCoupon");
 
 exports.createCoupon = expressAsyncHandler(async (req, res) => {
+  // const randomNumbers = [];
+  // for (let i = 0; i < req.body.count; i++) {
+  //   const randomNumber = Math.floor(Math.random() * 10 ** 10).toString();
+  //   randomNumbers.push({ number: randomNumber, discount: req.body.discount });
+  // }
+
+  // const coupons = await createCouponsModel.create({
+  //   coupon: randomNumbers,
+  //   expires: Date.now() + req.body.expires * 24 * 60 * 60 * 1000,
+  //   discount: req.body.discount,
+  // });
+
+  // res.status(201).json({
+  //   status: "success",
+  //   results: randomNumbers.length,
+  //   data: coupons,
+  // });
   const coupons = [];
   for (let i = 0; i < req.body.count; i++) {
     const code = Math.floor(Math.random() * 10 ** 10).toString(); // هنا ممكن تستخدم دالة لتوليد أكواد عشوائية
@@ -21,25 +38,34 @@ exports.createCoupon = expressAsyncHandler(async (req, res) => {
     });
     coupons.push(newCoupon);
   }
-  if (coupons.length < 1) {
-    res.status(500).json({ status: "Error" });
-  }
+if (coupons.length  0) {
+  
+}
   await createCouponsModel.insertMany(coupons);
-  res.status(201).json({ status: "Success", data: coupons });
+  res.status(201).json({
+    status: "success",
+    results: randomNumbers.length,
+    data: coupons,
+  });
 });
 exports.getCoupons = factory.getAll(createCouponsModel);
-
 exports.checkCoupon = async (req, res, next) => {
   const promoCodeDocument = await createCouponsModel.findOne({
-    code: { $regex: new RegExp(req.query.code, "i") },
+    coupon: {
+      $elemMatch: {
+        number: { $regex: `^${req.query.code ?? ""}$`, $options: "i" },
+      },
+    },
   });
-  if (promoCodeDocument.expires < Date.now()) {
-    return next(new ApiError(400, "Expires Coupon"));
+
+  if (promoCodeDocument) {
+    const promoCode = promoCodeDocument.coupon.find((c) =>
+      new RegExp(`^${req.query.code ?? ""}$`, "i").test(c.number)
+    );
+    res.status(201).json({ data: promoCode });
+  } else {
+    res.status(404).json({ error: "Promo code not found." });
   }
-  res.status(200).json({
-    message: "Checked Is Success",
-    data: promoCodeDocument,
-  });
 };
 
 exports.getCoupon = expressAsyncHandler(async (req, res, next) => {
