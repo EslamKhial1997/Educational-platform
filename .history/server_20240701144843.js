@@ -5,8 +5,8 @@ const morgan = require("morgan");
 const dbCollection = require("./Config/config");
 const globalError = require("./Middleware/globalError");
 const RoutesUsers = require("./Routes/RoutesUsers");
-const RoutesClasses = require("./Routes/RoutesClasses");
 const RoutesTeachers = require("./Routes/RoutesTeachers");
+const RoutesClasses = require(newFunction());
 const RoutesSections = require("./Routes/RoutesSections");
 const RoutesAuth = require("./Routes/RoutesAuth");
 const RoutesCoupons = require("./Routes/RoutesCoupons");
@@ -40,3 +40,7 @@ app.all("*", (req, res, next) => {
   next(new ApiError(`Sorry This URL ${req.originalUrl} does not exist`, 400));
 });
 app.use(globalError);
+function newFunction() {
+  return "./Routes/RoutesClasses";
+}
+

@@ -5,7 +5,6 @@ const morgan = require("morgan");
 const dbCollection = require("./Config/config");
 const globalError = require("./Middleware/globalError");
 const RoutesUsers = require("./Routes/RoutesUsers");
-const RoutesClasses = require("./Routes/RoutesClasses");
 const RoutesTeachers = require("./Routes/RoutesTeachers");
 const RoutesSections = require("./Routes/RoutesSections");
 const RoutesAuth = require("./Routes/RoutesAuth");

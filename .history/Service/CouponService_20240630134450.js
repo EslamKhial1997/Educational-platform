@@ -22,7 +22,7 @@ exports.createCoupon = expressAsyncHandler(async (req, res) => {
     coupons.push(newCoupon);
   }
   if (coupons.length < 1) {
-    res.status(500).json({ status: "Somthing want Error" });
+    res.status(500).json({ status: "Somthing want " });
   }
   await createCouponsModel.insertMany(coupons);
   res.status(201).json({ status: "Success", data: coupons });

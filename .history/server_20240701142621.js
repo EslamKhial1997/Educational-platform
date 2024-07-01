@@ -5,7 +5,6 @@ const morgan = require("morgan");
 const dbCollection = require("./Config/config");
 const globalError = require("./Middleware/globalError");
 const RoutesUsers = require("./Routes/RoutesUsers");
-const RoutesClasses = require("./Routes/RoutesClasses");
 const RoutesTeachers = require("./Routes/RoutesTeachers");
 const RoutesSections = require("./Routes/RoutesSections");
 const RoutesAuth = require("./Routes/RoutesAuth");
@@ -14,6 +13,7 @@ const RoutesChapters = require("./Routes/RoutesChapters");
 const ApiError = require("./Resuble/ApiErrors");
 const path = require("path");
 const { createFirstManegerAccount } = require("./Service/AuthService");
+const { createClasses } = require("./Service/ClassService");
 const app = express();
 app.use(express.static(path.join(__dirname, "uploads")));
 app.use(express.json());
@@ -27,11 +27,11 @@ app.use(cors());
 app.use("/api/v1/auth", RoutesAuth);
 app.use("/api/v1/users", RoutesUsers);
 app.use("/api/v1/teacher", RoutesTeachers);
-app.use("/api/v1/class", RoutesClasses);
 app.use("/api/v1/section", RoutesSections);
 app.use("/api/v1/coupon", RoutesCoupons);
 app.use("/api/v1/chapter", RoutesChapters);
 createFirstManegerAccount()
+createClasses()
 const PORT = process.env.PORT || 8008;
 const server = app.listen(PORT, () => {
   console.log(`Listen on the ${PORT}`);
