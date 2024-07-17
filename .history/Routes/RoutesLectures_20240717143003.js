@@ -15,7 +15,7 @@ const {
   deleteSectionValidator,
 } = require("../Resuble/SectionValidationError");
 const { createLectures,getLectures ,getLecture, updateLecture, deleteLecture } = require("../Service/LectureService");
-const { createLectureValidator, getLectureValidator, updateLectureValidator, deleteLectureValidator } = require("../Resuble/LectureValidationError");
+const { createLectureValidator, getLectureValidator } = require("../Resuble/LectureValidationError");
 
 const Routes = Router();
 Routes.use(protect);
@@ -25,6 +25,6 @@ Routes.route("/")
   .get(getLectures);
 Routes.route("/:id")
   .get(getLectureValidator, getLecture)
-  .put(updateLectureValidator, updateLecture)
-  .delete(deleteLectureValidator, deleteLecture);
+  .put(updateLectur, updateLecture)
+  .delete(deleteSectionValidator, deleteLecture);
 module.exports = Routes;

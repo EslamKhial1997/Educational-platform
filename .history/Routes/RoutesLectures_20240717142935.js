@@ -15,16 +15,15 @@ const {
   deleteSectionValidator,
 } = require("../Resuble/SectionValidationError");
 const { createLectures,getLectures ,getLecture, updateLecture, deleteLecture } = require("../Service/LectureService");
-const { createLectureValidator, getLectureValidator, updateLectureValidator, deleteLectureValidator } = require("../Resuble/LectureValidationError");
 
 const Routes = Router();
 Routes.use(protect);
 Routes.use(allowedTo("admin", "manager"));
 Routes.route("/")
-  .post(createLectureValidator, createLectures)
+  .post(create createLectures)
   .get(getLectures);
 Routes.route("/:id")
-  .get(getLectureValidator, getLecture)
-  .put(updateLectureValidator, updateLecture)
-  .delete(deleteLectureValidator, deleteLecture);
+  .get( getLecture)
+  .put(updateSectionValidator, updateLecture)
+  .delete(deleteSectionValidator, deleteLecture);
 module.exports = Routes;
