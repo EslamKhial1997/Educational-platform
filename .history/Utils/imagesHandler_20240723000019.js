@@ -5,12 +5,12 @@ const { v4: uuidv4 } = require("uuid");
 const fs = require("fs");
 exports.resizeImage = (type) =>
   expressAsyncHandler(async (req, res, next) => {
-    const imageType = req.file.mimetype.split("image/")[1];
+    const imageType = req.file[0].mimetype.split("image/")[1];
     if (req.file) {
       const filename = `${type}-${uuidv4()}-${Date.now()}.${imageType ? imageType :"jpeg"}`;
       await sharp(req.file.buffer)
         .resize(2000, 1333)
-        .toFormat(imageType)
+        .toFormat("jpeg")
         .jpeg({ quality: 70 })
         .toFile(`uploads/${type}/${filename}`);
       req.body.image = filename;

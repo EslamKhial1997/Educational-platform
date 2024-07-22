@@ -30,7 +30,7 @@ exports.updateUserPoint = expressAsyncHandler(async (req, res, next) => {
   const sender = await createUsersModel.findById(req.user._id);
   const receive = await createUsersModel.findById(receiver);
   if (!receive || receive.role !== "user") {
-    return Promise.reject(
+    return Promise.reject(  
       new Error("Sorry Admin Not Allowed To Send Points To Users")
     );
   }
@@ -119,11 +119,7 @@ exports.getAllTransactionsMonth = expressAsyncHandler(
 );
 exports.getAllTransactions = factory.getAll(createTransactionModel);
 exports.getOneTransaction = factory.getOne(createTransactionModel);
-exports.getMyTransactions = expressAsyncHandler(async (req, res, next) => {
-  const transactions = await createTransactionModel.find({
-    $or: [{ sender: req.user._id }, { receiver: req.user._id }],
-  });
-  if (!transactions)
-    next(new ApiError(`Sorry Can't get This ID From ID :${req.user._id}`, 404));
-  res.status(200).json({ data: transactions, results: transactions.length });
+exports.getMy = expressAsyncHandler(async (req, res, next) => {
+  req.params.id = req.user._id;
+  next();
 });

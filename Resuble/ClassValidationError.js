@@ -15,7 +15,7 @@ exports.createClassValidator = [
     .withMessage("Name Class is required"),
   check("teacher")
     .notEmpty()
-    .withMessage("Must be at E-mail Address")
+    .withMessage("Must be Teacher Id")
     .custom((val) =>
       createTeachersModel.findOne({ _id: val }).then((teacher) => {
         if (!teacher) {

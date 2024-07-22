@@ -4,11 +4,14 @@ const { protect, allowedTo } = require("../Service/AuthService");
 const {
   updateAdminPoint,
   updateUserPoint,
+  getTransactions,
   getTransactionsDate,
   getTransactionsYear,
   getAllTransactionsMonth,
   getAllTransactions,
   getOneTransaction,
+  getMySendTransactions,
+  getMyReceiveTransactions,
   getMyTransactions,
 } = require("../Service/TransactionService");
 

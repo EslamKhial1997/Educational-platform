@@ -9,6 +9,8 @@ const {
   getAllTransactionsMonth,
   getAllTransactions,
   getOneTransaction,
+  getMySendTransactions,
+
   getMyTransactions,
 } = require("../Service/TransactionService");
 

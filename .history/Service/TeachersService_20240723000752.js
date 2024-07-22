@@ -1,4 +1,6 @@
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
+const sendCode = require("../Utils/SendCodeEmail");
 const jwt = require("jsonwebtoken");
 const sharp = require("sharp");
 const { v4: uuidv4 } = require("uuid");

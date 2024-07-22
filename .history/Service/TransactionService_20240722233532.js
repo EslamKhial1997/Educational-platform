@@ -119,11 +119,14 @@ exports.getAllTransactionsMonth = expressAsyncHandler(
 );
 exports.getAllTransactions = factory.getAll(createTransactionModel);
 exports.getOneTransaction = factory.getOne(createTransactionModel);
-exports.getMyTransactions = expressAsyncHandler(async (req, res, next) => {
+exports.getMySendTransactions = expressAsyncHandler(async (req, res, next) => {
   const transactions = await createTransactionModel.find({
-    $or: [{ sender: req.user._id }, { receiver: req.user._id }],
+    sender: req.user._id,
   });
   if (!transactions)
-    next(new ApiError(`Sorry Can't get This ID From ID :${req.user._id}`, 404));
-  res.status(200).json({ data: transactions, results: transactions.length });
+    next(
+      new ApiError(`Sorry Can't get This ID From ID :${req.params.id}`, 404)
+    );
+  res.status(200).json({ data: getDocById });
+
 });

@@ -1,13 +1,17 @@
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
+const sendCode = require("../Utils/SendCodeEmail");
 const jwt = require("jsonwebtoken");
 const sharp = require("sharp");
 const { v4: uuidv4 } = require("uuid");
+// const { UploadSingleImage } = require("../Middleware/UploadImageMiddleware");
 const factory = require("./FactoryHandler");
 const expressAsyncHandler = require("express-async-handler");
 const ApiError = require("../Resuble/ApiErrors");
 const { UploadMultiImage } = require("../Middleware/UploadImageMiddleware");
 const createTeachersModel = require("../Modules/createTeacher");
 
+// const ApiError = require("../Resuble/ApiErrors");
 
 exports.resizeImage = expressAsyncHandler(async (req, res, next) => {
   if (req.files.image) {

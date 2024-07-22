@@ -4,18 +4,17 @@ const { protect, allowedTo } = require("../Service/AuthService");
 const {
   updateAdminPoint,
   updateUserPoint,
+  getTransactions,
   getTransactionsDate,
   getTransactionsYear,
   getAllTransactionsMonth,
   getAllTransactions,
   getOneTransaction,
-  getMyTransactions,
 } = require("../Service/TransactionService");
-
 
 const Routes = Router();
 Routes.use(protect);
-Routes.get("/getMyTransactions" , getMyTransactions);
+Routes.get("/getMyTransactions", getLoggedUserData, getOneTransaction);
 Routes.route("/manager/sendPoints").put(allowedTo("manager"), updateAdminPoint);
 Routes.route("/").get(allowedTo("manager", "admin"), getAllTransactions);
 Routes.route("/:id").get(allowedTo("manager", "admin"), getOneTransaction);
