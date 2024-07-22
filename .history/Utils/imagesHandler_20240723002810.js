@@ -11,8 +11,9 @@ exports.resizeImage = (type) =>
         imageType ? imageType : "jpeg"
       }`;
       await sharp(req.file.buffer)
-        .resize(500, 750)
+        .resize(500, 500)
         .toFormat(imageType)
+        .jpeg({ quality: 70 })
         .toFile(`uploads/${type}/${filename}`);
       req.body.image = filename;
     }
@@ -21,6 +22,7 @@ exports.resizeImage = (type) =>
 
 exports.uploadImage = UploadSingleImage("image");
 exports.fsRemove = async (filePath) => {
+  console.log(filePath);
   if (!filePath) return;
   fs.unlink(filePath, (err) => {
     if (err) {

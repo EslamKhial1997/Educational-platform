@@ -8,6 +8,7 @@ const ApiError = require("../Resuble/ApiErrors");
 const { UploadMultiImage } = require("../Middleware/UploadImageMiddleware");
 const createTeachersModel = require("../Modules/createTeacher");
 
+
 exports.resizeImage = expressAsyncHandler(async (req, res, next) => {
   if (req.files.image) {
     const imageType = req.files.image[0].mimetype.split("image/")[1];
