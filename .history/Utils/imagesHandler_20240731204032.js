@@ -12,7 +12,7 @@ exports.resizeImage = (type) =>
         imageType ? imageType : "jpeg"
       }`;
       await sharp(req.file.buffer)
-        .resize(750, 750)
+        .resize(0, 750)
         .toFormat(imageType)
         .toFile(`uploads/${type}/${filename}`);
       req.body.image = filename;

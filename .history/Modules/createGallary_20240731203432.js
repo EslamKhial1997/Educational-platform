@@ -14,13 +14,7 @@ const createGallery = new mongoose.Schema(
   },
   { timestamps: true }
 );
-createGallery.pre(/^find/, function (next) {
-  this.populate({
-    path: "teacher",
-    select: "name",
-  });
-  next();
-});
+
 const ImageURL = (doc) => {
   if (doc.image && !doc.image.includes(`${process.env.BASE_URL}/gallery`)) {
     const image = `${process.env.BASE_URL}/gallery/${doc.image}`;

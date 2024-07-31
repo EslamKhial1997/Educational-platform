@@ -14,7 +14,7 @@ const createGallery = new mongoose.Schema(
   },
   { timestamps: true }
 );
-createGallery.pre(/^find/, function (next) {
+createClass.pre(/^find/, function (next) {
   this.populate({
     path: "teacher",
     select: "name",
