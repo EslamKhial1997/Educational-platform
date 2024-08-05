@@ -8,11 +8,16 @@ const {
   verifyRegister,
   createUsers,
   getUsers,
-
+  //   updateUser,
+  //   deleteUser,
   getUser,
   updateLoggedUserPassword,
   getLoggedUserData,
   updateUserPoint,
+  //   updateLoggedUserData,
+
+  //   updateUserRole,
+  //   updateUserStatus,
 } = require("../Service/UsersService");
 const { protect, allowedTo } = require("../Service/AuthService");
 const {

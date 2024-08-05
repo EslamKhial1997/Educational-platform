@@ -13,6 +13,10 @@ const {
   updateLoggedUserPassword,
   getLoggedUserData,
   updateUserPoint,
+  //   updateLoggedUserData,
+
+  //   updateUserRole,
+  //   updateUserStatus,
 } = require("../Service/UsersService");
 const { protect, allowedTo } = require("../Service/AuthService");
 const {
