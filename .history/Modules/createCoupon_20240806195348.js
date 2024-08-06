@@ -23,7 +23,13 @@ const createCoupons = new mongoose.Schema(
   { timestamps: true }
 );
 
-
+createCoupons.post('save', function (doc, next) {
+  log
+  doc.populate('lecture')
+    .execPopulate()
+    .then(() => next())
+    .catch(next);
+});
 createCoupons.pre(/^find/, function (next) {
   this.populate({
     path: "section",
@@ -39,14 +45,8 @@ createCoupons.pre(/^find/, function (next) {
 });
 createCoupons.pre(/^find/, function (next) {
   this.populate({
-    path: "section",
-  });
-  next();
-});
-createCoupons.pre(/^find/, function (next) {
-  this.populate({
     path: "createdBy",
-    select: "name  image",
+    select: "username  image",
   });
   next();
 });

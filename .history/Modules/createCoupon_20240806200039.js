@@ -39,7 +39,7 @@ createCoupons.pre(/^find/, function (next) {
 });
 createCoupons.pre(/^find/, function (next) {
   this.populate({
-    path: "section",
+    path: "lecture",
   });
   next();
 });

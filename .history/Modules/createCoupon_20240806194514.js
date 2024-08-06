@@ -22,8 +22,12 @@ const createCoupons = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-
+createCoupons.pre(/^find/, function (next) {
+  this.populate({
+    path: "lecture",
+  });
+  next();
+});
 createCoupons.pre(/^find/, function (next) {
   this.populate({
     path: "section",
@@ -39,23 +43,18 @@ createCoupons.pre(/^find/, function (next) {
 });
 createCoupons.pre(/^find/, function (next) {
   this.populate({
-    path: "section",
-  });
-  next();
-});
-createCoupons.pre(/^find/, function (next) {
-  this.populate({
     path: "createdBy",
-    select: "name  image",
+    select: "username  image",
   });
   next();
 });
-// createCoupons.pre("save", function (next) {
-//   this.populate({
-//     path: "lecture",
-//   });
-//   next();
-// });
+createCoupons.pre("save", function (next) {
+  this.populate({
+    path: "lecture",
+    select: "username  image",
+  });
+  next();
+});
 
 // Delete Coupon After Expires Date
 createCoupons.index({ expires: 10 }, { expireAfterSeconds: 0 });

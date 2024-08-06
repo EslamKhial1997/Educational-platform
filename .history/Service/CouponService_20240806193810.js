@@ -18,20 +18,15 @@ exports.createCoupon = expressAsyncHandler(async (req, res) => {
       section: req.body.section,
       // teacher: req.body.teacher,
       createdBy: req.user._id,
-    });
+    }).populate;
     coupons.push(newCoupon);
   }
   if (coupons.length < 1) {
     res.status(500).json({ status: "Somthing want Error" });
   }
   // Insert Coupon
-  const insertedCoupons = await createCouponsModel.insertMany(coupons);
-  for (let coupon of insertedCoupons) {
-    await coupon.populate("lecture");
-    await coupon.populate("section");
-    await coupon.populate({ path: "createdBy", select: "name image" });
-  }
-  res.status(201).json({ status: "Success", data: insertedCoupons });
+  await createCouponsModel.insertMany(coupons);
+  res.status(201).json({ status: "Success", data: coupons });
 });
 exports.getCoupons = factory.getAll(createCouponsModel);
 

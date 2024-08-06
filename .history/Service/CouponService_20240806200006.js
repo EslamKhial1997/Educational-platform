@@ -25,13 +25,13 @@ exports.createCoupon = expressAsyncHandler(async (req, res) => {
     res.status(500).json({ status: "Somthing want Error" });
   }
   // Insert Coupon
-  const insertedCoupons = await createCouponsModel.insertMany(coupons);
+  const insertedCoupons =await createCouponsModel.insertMany(coupons);
   for (let coupon of insertedCoupons) {
-    await coupon.populate("lecture");
-    await coupon.populate("section");
-    await coupon.populate({ path: "createdBy", select: "name image" });
+    await coupon.populate('lecture')
+    await coupon.populate('section')
+    await coupon.populate({path:'createdBy' , sele})
   }
-  res.status(201).json({ status: "Success", data: insertedCoupons });
+  res.status(201).json({ status: "Success", data: insertedCoupons  });
 });
 exports.getCoupons = factory.getAll(createCouponsModel);
 
