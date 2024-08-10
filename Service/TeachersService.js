@@ -72,7 +72,9 @@ exports.createTeachers = expressAsyncHandler(async (req, res) => {
 exports.getTeachers = factory.getAll(createTeachersModel);
 exports.getAllDataTeacher = expressAsyncHandler(async (req, res, next) => {
   const teacher = await createTeachersModel.findById(req.params.id);
-  const gallery = await createGalleryModel.findById(req.params.id);
+  const gallery = await createGalleryModel.find({
+    teacher: req.params.id,
+  });
   const classes = await createClassModel.find({
     teacher: req.params.id,
   });

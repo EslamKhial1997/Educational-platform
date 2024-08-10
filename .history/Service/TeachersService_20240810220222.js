@@ -1,42 +1,51 @@
 const bcrypt = require("bcrypt");
-const crypto = require("crypto");
-const sendCode = require("../Utils/SendCodeEmail");
 const jwt = require("jsonwebtoken");
 const sharp = require("sharp");
 const { v4: uuidv4 } = require("uuid");
-// const { UploadSingleImage } = require("../Middleware/UploadImageMiddleware");
 const factory = require("./FactoryHandler");
 const expressAsyncHandler = require("express-async-handler");
 const ApiError = require("../Resuble/ApiErrors");
 const { UploadMultiImage } = require("../Middleware/UploadImageMiddleware");
 const createTeachersModel = require("../Modules/createTeacher");
-
-// const ApiError = require("../Resuble/ApiErrors");
+const createClassModel = require("../Modules/createClasses");
+const createSectionModel = require("../Modules/createSection");
+const createGalleryModel = require("../Modules/createGallary");
 
 exports.resizeImage = expressAsyncHandler(async (req, res, next) => {
   if (req.files.image) {
-    const filename = `image-${uuidv4()}-${Date.now()}.png`;
+    const imageType = req.files.image[0].mimetype.split("image/")[1];
+
+    const filename = `image-${uuidv4()}-${Date.now()}.${
+      imageType ? imageType : "jpeg"
+    }`;
     await sharp(req.files.image[0].buffer)
-      .resize(500, 750)
-      .toFormat("png")
-      .jpeg({ quality: 50 })
+      .resize(750, 750)
+      .toFormat(imageType)
       .toFile(`uploads/teacher/${filename}`);
     req.body.image = filename;
   }
   if (req.files.picture) {
-    const filename = `picture-${uuidv4()}-${Date.now()}.png`;
+    const imageType = req.files.picture[0].mimetype.split("image/")[1];
+
+    const filename = `picture-${uuidv4()}-${Date.now()}.${
+      imageType ? imageType : "jpeg"
+    }`;
     await sharp(req.files.picture[0].buffer)
-      .resize(500, 750)
-      .toFormat("png")
+      .resize(750, 750)
+      .toFormat(imageType)
       .jpeg({ quality: 50 })
       .toFile(`uploads/teacher/${filename}`);
     req.body.picture = filename;
   }
   if (req.files.avater) {
-    const filename = `avater-${uuidv4()}-${Date.now()}.png`;
+    const imageType = req.files.avater[0].mimetype.split("image/")[1];
+
+    const filename = `avater-${uuidv4()}-${Date.now()}.${
+      imageType ? imageType : "jpeg"
+    }`;
     await sharp(req.files.avater[0].buffer)
       .resize(500, 750)
-      .toFormat("png")
+      .toFormat(imageType)
       .jpeg({ quality: 50 })
       .toFile(`uploads/teacher/${filename}`);
     req.body.avater = filename;
@@ -61,6 +70,26 @@ exports.createTeachers = expressAsyncHandler(async (req, res) => {
 });
 
 exports.getTeachers = factory.getAll(createTeachersModel);
+exports.getAllDataTeacher = expressAsyncHandler(async (req, res, next) => {
+  const teacher = await createTeachersModel.findById(req.params.id);
+  const gallery = await createGalleryModel.find({
+    teacher: req.params.id,
+  });
+  const classes = await createClassModel.find({
+    teacher: req.params.id,
+  });
+  const section = await createSectionModel.find({
+    class: classes._id,
+  });
+  res.status(201).json({
+    data: {
+      teacher,
+      gallery,
+      classes,
+      section,
+    },
+  });
+});
 exports.getTeacher = factory.getOne(createTeachersModel);
 exports.updateTeacher = factory.updateOne(createTeachersModel);
 exports.deleteTeacher = factory.deleteOne(createTeachersModel);
@@ -126,54 +155,3 @@ exports.updateLoggedTeacherPassword = expressAsyncHandler(async (req, res) => {
   console.log(Teacher);
   res.status(200).json({ data: Teacher, token });
 });
-// exports.updateLoggedTeacherData = expressAsyncHandler(async (req, res, next) => {
-//   const updatedTeacher = await createTeachersModel.findByIdAndUpdate(
-//     req.Teacher._id,
-//     {
-//       name: req.body.name,
-//       phone: req.body.phone,
-//       imageProfile: req.body.imageProfile,
-//     },
-//     { new: true }
-//   );
-
-//   res.status(200).json({ data: updatedTeacher });
-// });
-// exports.deleteLoggedTeacherData = expressAsyncHandler(async (req, res, next) => {
-//   await createTeachersModel.findByIdAndUpdate(req.Teacher._id, { active: false });
-
-//   res.status(204).json({ status: "Success" });
-// });
-
-// exports.updateTeacherRole = expressAsyncHandler(async (req, res, next) => {
-//   const Teacher = await createTeachersModel.findByIdAndUpdate(
-//     req.params.id,
-//     {
-//       role: req.body.role,
-//     },
-//     {
-//       new: true,
-//     }
-//   );
-//   if (!Teacher) {
-//     return next(new ApiError(`Teacher ${req.params.id} Not Found`));
-//   }
-
-//   res.status(200).json({ data: Teacher });
-// });
-// exports.updateTeacherStatus = expressAsyncHandler(async (req, res, next) => {
-//   const Teacher = await createTeachersModel.findByIdAndUpdate(
-//     req.params.id,
-//     {
-//       status: req.body.status,
-//     },
-//     {
-//       new: true,
-//     }
-//   );
-//   if (!Teacher) {
-//     return next(new ApiError(`Teacher ${req.params.id} Not Found`));
-//   }
-
-//   res.status(200).json({ data: Teacher });
-// });
