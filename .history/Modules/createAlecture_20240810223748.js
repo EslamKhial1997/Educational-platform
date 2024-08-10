@@ -45,15 +45,15 @@ createLectures.pre(/^find/, function (next) {
   next();
 });
 const ImageURL = (doc) => {
-  if (doc.image && !doc.image.includes(`${process.env.BASE_URL}/lecture`)) {
+  if (doc.image && !doc.image.includes(`${process.env.BASE_URL}/class`)) {
     const image = `${process.env.BASE_URL}/lecture/${doc.image}`;
     doc.image = image;
   }
 };
-createLectures.post("init", (doc) => {
+createClass.post("init", (doc) => {
   ImageURL(doc);
 });
-createLectures.post("save", (doc) => {
+createClass.post("save", (doc) => {
   ImageURL(doc);
 });
 const createLecturesModel = mongoose.model("Lectures", createLectures);

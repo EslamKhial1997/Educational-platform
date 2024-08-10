@@ -10,7 +10,6 @@ const createTeachersModel = require("../Modules/createTeacher");
 const createClassModel = require("../Modules/createClasses");
 const createSectionModel = require("../Modules/createSection");
 const createGalleryModel = require("../Modules/createGallary");
-const createLecturesModel = require("../Modules/createAlecture");
 
 exports.resizeImage = expressAsyncHandler(async (req, res, next) => {
   if (req.files.image) {
@@ -82,9 +81,11 @@ exports.getAllDataTeacher = expressAsyncHandler(async (req, res, next) => {
   const section = await createSectionModel.find({
     class: { $in: classes.map(cls => cls._id) },
   });
-  const lecutre = await createLecturesModel.find({
-    section: { $in: section.map(cls => cls._id) },
+  const lecutre = await createSectionModel.find({
+    section,
   });
+ 
+  
   res.status(201).json({
     data: {
       teacher,

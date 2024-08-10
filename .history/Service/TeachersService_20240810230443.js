@@ -85,6 +85,9 @@ exports.getAllDataTeacher = expressAsyncHandler(async (req, res, next) => {
   const lecutre = await createLecturesModel.find({
     section: { $in: section.map(cls => cls._id) },
   });
+ console.log(section._id ,lecutre);
+ 
+  
   res.status(201).json({
     data: {
       teacher,
