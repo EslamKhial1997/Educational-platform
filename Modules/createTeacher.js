@@ -52,21 +52,7 @@ const createTeachers = new mongoose.Schema(
      
       default: "teacher",
     },
-    // history: [
-    //   {
-    //     from: {
-    //       type: String,
-    //     },
-    //     to: {
-    //       type: String,
-    //     },
-    //     point: String,
-    //     history: {
-    //       type: Date,
-    //       default: new Date(),
-    //     },
-    //   },
-    // ],
+
 
   
   },

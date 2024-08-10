@@ -4,21 +4,28 @@ const createTeachers = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, "Required Name Teacher"],
+      required: [true, "Required Name "],
       minlength: [3, "Name Too Short To Create"],
       maxlength: [32, "Name Too long To Create"],
+    },
+    description: {
+      type: String,
+    },
+    subject: {
+      type: String,
+
     },
     slug: {
       type: String,
     },
     email: {
       type: String,
-      required: [true, "Required E-mail Teacher"],
+      required: [true, "Required E-mail "],
       trim: true,
     },
     password: {
       type: String,
-      required: [true, "Required Password Teacher"],
+      required: [true, "Required Password "],
       minlength: [6, "Password Too Short To Create"],
     },
 
@@ -42,29 +49,12 @@ const createTeachers = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["admin , teacher"],
-      default: "admin",
+     
+      default: "teacher",
     },
-    history: [
-      {
-        from: {
-          type: String,
-        },
-        to: {
-          type: String,
-        },
-        point: String,
-        history: {
-          type: Date,
-          default: new Date(),
-        },
-      },
-    ],
 
-    AccountVerify: {
-      type: Boolean,
-      default: false,
-    },
+
+  
   },
   { timestamps: true }
 );

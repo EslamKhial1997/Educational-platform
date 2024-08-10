@@ -62,8 +62,7 @@ exports.UploadImageService = UploadMultiImage([
 exports.createTeachers = expressAsyncHandler(async (req, res) => {
   req.body.password = await bcrypt.hash(req.body.password, 12);
   const teacher = await createTeachersModel.create(req.body);
-console.log(req.body);
-
+log
   await teacher.save();
   res.status(200).json({
     status: "success",

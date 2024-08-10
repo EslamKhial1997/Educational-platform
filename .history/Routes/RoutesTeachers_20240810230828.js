@@ -6,21 +6,11 @@ const {
 } = require("../Resuble/UsersvalidatorError");
 const {
   verifyRegister,
-  createUsers,
-  getUsers,
-  //   updateUser,
-  //   deleteUser,
-  getUser,
 
-  //   uploadImage,
-  //   resizeImageUsers,
+  getUser,
   updateLoggedUserPassword,
   getLoggedUserData,
   updateUserPoint,
-  //   updateLoggedUserData,
-
-  //   updateUserRole,
-  //   updateUserStatus,
 } = require("../Service/UsersService");
 const { protect, allowedTo } = require("../Service/AuthService");
 const {
@@ -31,6 +21,7 @@ const {
   getTeacher,
   deleteTeacher,
   updateTeacher,
+  getAllDataTeacher,
 } = require("../Service/TeachersService");
 const {
   createTeachersValidator,
@@ -42,23 +33,43 @@ const Routes = Router();
 
 // Only Access the Logged Users
 
-Routes.get("/getMe",protect, getLoggedUserData, getUser);
+Routes.get("/getMe", protect, getLoggedUserData, getUser);
 
-Routes.put("/changeUserPassword", UpdateUserPassword, updateLoggedUserPassword); 
+Routes.put(
+  "/changeUserPassword",
+  protect,
+  UpdateUserPassword,
+  updateLoggedUserPassword
+);
 Routes.route("/")
   .post(
+    protect,
     allowedTo("manager"),
 
-    UploadImageService, 
+    UploadImageService,
     createTeachersValidator,
     resizeImage,
     createTeachers
   )
   .get(getTeachers);
 Routes.route("/verifycode").post(verifyRegister);
-Routes.route("/addpoint/:id").put(updateUserPoint);
+// Routes.route("/addpoint/:id").put(updateUserPoint);
 Routes.route("/:id")
-  .get(getOneUserValidator, getTeacher)
-  .delete(deleteOneTeacherValidator, deleteTeacher)
-  .put(UploadImageService, resizeImage, updateTeacherValidator, updateTeacher);
+  // .get(getOneUserValidator, getTeacher)
+  .get(getOneUserValidator, getAllDataTeacher)
+  .delete(
+    protect,
+    allowedTo("manager"),
+    deleteOneTeacherValidator,
+    deleteTeacher
+  )
+  .put(
+    protect,
+    allowedTo("manager"),
+    UploadImageService,
+    resizeImage,
+    updateTeacherValidator,
+    updateTeacher
+  );
+
 module.exports = Routes;
