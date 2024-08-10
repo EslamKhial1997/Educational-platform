@@ -222,12 +222,15 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
       }
     }
 
-    const totalPriceAfterDiscount = couponModel
-      ? (
-          lactureModel.price -
-          (lactureModel.price * couponModel.discount) / 100
-        ).toFixed(0)
-      : 0;
+    // const totalPriceAfterDiscount = (
+    //   lactureModel.price -
+    //   (lactureModel.price * couponModel.discount ? couponModel.discount :0) / 100
+    // ).toFixed(0);
+    const totalPriceAfterDiscount = (
+      lactureModel.price -
+      (lactureModel.price * couponModel.discount) / 100
+    ).toFixed(0);
+    console.log(totalPriceAfterDiscount, couponModel.discount);
 
     // إنشاء المعاملة
     const transaction = new createTransactionModel({

@@ -161,8 +161,9 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
     }
 
     // حساب السعر الإجمالي بعد الخصم
-    const section = await createSectionModel.findById(lactureModel.section._id);
-
+    const section = await createSectionModel.findById(lactureModel.section._id)
+    console.log(lactureModel);
+    
     let coures = await createCouresModel.findOne({ user: req.user._id });
     const { lacture } = req.body;
 
@@ -196,7 +197,7 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
         // إذا لم تكن المحاضرة موجودة، أضفها إلى الدورة
         coures.couresItems.push({
           lacture,
-          teacherID: section.class.teacher._id,
+          teacherID: lactureModel.teacher._id,
           coupon: couponModel ? couponModel.code : null,
           discount: couponModel ? couponModel.discount : null,
         });
@@ -222,12 +223,10 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
       }
     }
 
-    const totalPriceAfterDiscount = couponModel
-      ? (
-          lactureModel.price -
-          (lactureModel.price * couponModel.discount) / 100
-        ).toFixed(0)
-      : 0;
+    const totalPriceAfterDiscount = (
+      lactureModel.price -
+      (lactureModel.price * couponModel ? couponModel.discount :0) / 100
+    ).toFixed(0);
 
     // إنشاء المعاملة
     const transaction = new createTransactionModel({
@@ -254,8 +253,10 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
     );
 
     // حذف الكوبون بعد استخدامه
-    if (couponModel) {
-      await createCouponsModel.findByIdAndDelete(couponModel._id);
+    if(couponModel){
+      await createCouponsModel.findByIdAndDelete(
+      couponModel._id
+    );
     }
     user.ip = serverIp;
 

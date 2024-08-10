@@ -161,8 +161,9 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
     }
 
     // حساب السعر الإجمالي بعد الخصم
-    const section = await createSectionModel.findById(lactureModel.section._id);
-
+    const section = await createSectionModel.findById(lactureModel.section._id)
+    
+    
     let coures = await createCouresModel.findOne({ user: req.user._id });
     const { lacture } = req.body;
 
@@ -222,12 +223,15 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
       }
     }
 
-    const totalPriceAfterDiscount = couponModel
-      ? (
-          lactureModel.price -
-          (lactureModel.price * couponModel.discount) / 100
-        ).toFixed(0)
-      : 0;
+    // const totalPriceAfterDiscount = (
+    //   lactureModel.price -
+    //   (lactureModel.price * couponModel.discount ? couponModel.discount :0) / 100
+    // ).toFixed(0);
+      const totalPriceAfterDiscount = (
+    lactureModel.price -
+    (lactureModel.price * couponModel.discount) / 100
+  ).toFixed(0);
+console.log(totalPriceAfterDiscount ,couponModel);
 
     // إنشاء المعاملة
     const transaction = new createTransactionModel({
@@ -254,8 +258,10 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
     );
 
     // حذف الكوبون بعد استخدامه
-    if (couponModel) {
-      await createCouponsModel.findByIdAndDelete(couponModel._id);
+    if(couponModel){
+      await createCouponsModel.findByIdAndDelete(
+      couponModel._id
+    );
     }
     user.ip = serverIp;
 
