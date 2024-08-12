@@ -15,7 +15,6 @@ const Routes = Router();
 
 Routes.route("/")
   .post(
-    protect,
     allowedTo("admin", "manager"),
     uploadImage,
     resizeImage("gallery"),
@@ -24,6 +23,6 @@ Routes.route("/")
   .get(getGallerys);
 Routes.route("/:id")
   .get(getGallery)
-  .put(protect,allowedTo("admin", "manager"),uploadImage, resizeImage("gallery"), updateGallery)
-.delete(protect,allowedTo("admin", "manager"), deleteGallery);
+  .put(uploadImage, resizeImage("gallery"), updateGallery)
+.delete( deleteGallery);
 module.exports = Routes;

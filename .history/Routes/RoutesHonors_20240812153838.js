@@ -32,5 +32,5 @@ Routes.route("/:id")
     resizeImage("honor"),
     updateHonor
   )
-  .delete(protect,allowedTo("admin", "manager"), deleteHonor);
+  .delete(allowedTo("admin", "manager"), deleteHonor);
 module.exports = Routes;

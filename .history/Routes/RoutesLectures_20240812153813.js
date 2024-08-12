@@ -20,12 +20,12 @@ const { createLectureValidator, getLectureValidator, updateLectureValidator, del
 const { uploadImage, resizeImage } = require("../Utils/imagesHandler");
 
 const Routes = Router();
-
+Routes.use();
 Routes.route("/")
-  .post(protect,allowedTo("admin", "manager"),uploadImage,createLectureValidator, resizeImage("lecture"), createLectures)
+  .post(allowedTo("admin", "manager"),uploadImage,createLectureValidator, resizeImage("lecture"), createLectures)
   .get(getLectures);
 Routes.route("/:id")
   .get(getLectureValidator, getLecture)
-  .put(protect,allowedTo("admin", "manager"),updateLectureValidator, updateLecture)
-  .delete(protect,allowedTo("admin", "manager"),deleteLectureValidator, deleteLecture);
+  .put(allowedTo("admin", "manager"),updateLectureValidator, updateLecture)
+  .delete(allowedTo("admin", "manager"),deleteLectureValidator, deleteLecture);
 module.exports = Routes;

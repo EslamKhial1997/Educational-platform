@@ -25,12 +25,11 @@ Routes.route("/")
 Routes.route("/:id")
   .get(getHonor)
   .put(
-    protect,
     allowedTo("admin", "manager"),
     uploadImage,
     updateClassValidator,
     resizeImage("honor"),
     updateHonor
   )
-  .delete(protect,allowedTo("admin", "manager"), deleteHonor);
+  .delete(allowedTo("admin", "manager"), deleteHonor);
 module.exports = Routes;

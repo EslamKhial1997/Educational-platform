@@ -24,6 +24,6 @@ Routes.route("/")
   .get(getGallerys);
 Routes.route("/:id")
   .get(getGallery)
-  .put(protect,allowedTo("admin", "manager"),uploadImage, resizeImage("gallery"), updateGallery)
-.delete(protect,allowedTo("admin", "manager"), deleteGallery);
+  .put(protect,allowedTo("admin", "manager"),,uploadImage, resizeImage("gallery"), updateGallery)
+.delete(protect,allowedTo("admin", "manager"),, deleteGallery);
 module.exports = Routes;

@@ -16,7 +16,6 @@ const Routes = Router();
 
 Routes.route("/")
   .post(
-    protect,
     allowedTo("admin", "manager"),
     uploadImage,
     resizeImage("slider"),
@@ -26,11 +25,10 @@ Routes.route("/")
 Routes.route("/:id")
   .get(getSlider)
   .put(
-    protect,
     allowedTo("admin", "manager"),
     uploadImage,
     resizeImage("slider"),
     updateSlider
   )
-  .delete(protect,allowedTo("admin", "manager"), deleteSlider);
+  .delete(allowedTo("admin", "manager"), deleteSlider);
 module.exports = Routes;
