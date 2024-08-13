@@ -355,7 +355,7 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
         section: req.body.section,
       });
 
-      let lecturesAdded = false;
+      let lectureExists = false;
 
       for (const lecture of lectures) {
         const lectureExistsIndex = coures.couresItems.findIndex(
@@ -371,12 +371,16 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
             discount: couponModel ? couponModel.discount : null,
             ip: serverIp,
           });
-          lecturesAdded = true;
+        } else {
+          lectureExists = true;
         }
       }
 
-      if (lecturesAdded) {
-        await coures.save(); // حفظ التغييرات فقط إذا تمت إضافة محاضرات جديدة
+      if (lectureExists) {
+        return res.status(400).json({
+          status: "Failure",
+          message: "One or more lectures already exist in the course. No update needed.",
+        });
       }
     } else if (lactureModel) {
       const lectureExistsIndex = coures.couresItems.findIndex(
@@ -394,7 +398,6 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
           discount: couponModel ? couponModel.discount : null,
           ip: serverIp,
         });
-        await coures.save(); // حفظ التغييرات فقط إذا تمت إضافة محاضرة جديدة
       } else {
         return res.status(400).json({
           status: "Failure",
@@ -440,6 +443,7 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
     await user.save();
     await transaction.save();
     await teacherModel.save();
+    await coures.save();
 
     res.status(200).json({
       data: {
@@ -451,7 +455,6 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
     next(error);
   }
 });
-
 
 exports.getCouress = expressAsyncHandler(async (req, res, next) => {
   const coures = await createCouresModel.findOne({ user: req.user._id });

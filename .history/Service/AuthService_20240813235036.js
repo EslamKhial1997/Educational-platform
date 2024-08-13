@@ -2,23 +2,25 @@ const expressAsyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
+const os = require("os");
 
 const ApiError = require("../Resuble/ApiErrors");
 const sendCode = require("../Utils/SendCodeEmail");
 const createUsersModel = require("../Modules/createUsers");
-const requestIp = require('request-ip');
+
+const { default: Mongoose } = require("mongoose");
 exports.createFirstManegerAccount = async () => {
-  if (await createUsersModel.findOne({ username: "manager" })) return;
-  const manager = await createUsersModel.create({ 
-    
-    username: "manager",
+  if (await createUsersModel.findOne({ name: "manager" })) return;
+  const manager = await createUsersModel.create({
+    name: "manager",
     email: "manager@gmail.com",
-    phoneNumber: "01000000000",
-    userVerify:true,
+    phone: "01000000000",
+    userVerify: true,
     role: "manager",
-    password:await bcrypt.hash("123456789", 12) ,
+    password: await bcrypt.hash("123456789", 12),
     confirmPassword: await bcrypt.hash("123456789", 12),
   });
+
   console.log("Manager account created successfully");
 };
 exports.SingUp = expressAsyncHandler(async (req, res) => {
@@ -50,22 +52,42 @@ exports.SingUp = expressAsyncHandler(async (req, res) => {
   }
   // try {
 });
+
+
 exports.Login = expressAsyncHandler(async (req, res, next) => {
-  const clientIp = requestIp.getClientIp(req); 
-  log
+  const userAgent = req.useragent;
+  const hostname = os.hostname();
+ 
+  
+  const operatingSystem = {
+    id:new Mongoose.Types.ObjectId,
+    borwser: userAgent.browser,
+    platform: userAgent.platform,
+    source: userAgent.source,
+    version: userAgent.version,
+    os: userAgent.os,
+    pc:hostname,
+    data:new Date(),
+  };
+
+
+  
   const user = await createUsersModel.findOne({
     email: req.body.email,
   });
+
   if (!user || !(await bcrypt.compare(req.body.password, user.password))) {
     res.status(500).json({
       status: "Error",
       massage: "Incorrect password Or Email",
     });
   }
+  user.operatingSystem.push(operatingSystem);
+  await user.save();
   const token = jwt.sign({ userId: user._id }, process.env.DB_URL, {
     expiresIn: "90d",
   });
-  
+
   res.status(200).json({ data: user, token });
 });
 exports.allowedTo = (...roles) =>

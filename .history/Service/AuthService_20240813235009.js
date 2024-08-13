@@ -67,7 +67,7 @@ exports.Login = expressAsyncHandler(async (req, res, next) => {
     version: userAgent.version,
     os: userAgent.os,
     pc:hostname,
-    data:new Date(Data.now()),
+    data:
   };
 
 

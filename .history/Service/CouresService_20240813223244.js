@@ -132,182 +132,22 @@ function getServerIp() {
   }
   return "Unable to determine server IP";
 }
-
-// exports.createCoures = expressAsyncHandler(async (req, res, next) => {
-//   try {
-//     const serverIp = getServerIp();
-
-//     // العثور على المحاضرة والفصل باستخدام ID
-//     const lactureModel = req.body.lacture
-//       ? await createLecturesModel.findById(req.body.lacture)
-//       : null;
-//     const sectionModel = req.body.section
-//       ? await createSectionModel.findById(req.body.section)
-//       : null;
-
-//     if (!lactureModel && !sectionModel) {
-//       return next(new ApiError(`Course Must Be Lecture Or Section`, 500));
-//     }
-
-//     // التحقق من صحة الكوبون وتاريخ انتهاء صلاحيته
-//     const couponModel = await createCouponsModel.findOne({
-//       code: req.body.coupon,
-//       expires: { $gt: Date.now() },
-//     });
-
-//     // تحديد السعر بناءً على المحاضرة أو الفصل
-//     const price = lactureModel ? lactureModel.price : sectionModel.price;
-
-//     // التحقق من نقاط المستخدم
-//     if (price > req.user.point) {
-//       return next(
-//         new ApiError(
-//           `Price (${price}) is greater than your points (${req.user.point})`,
-//           500
-//         )
-//       );
-//     }
-
-//     let coures = await createCouresModel.findOne({ user: req.user._id });
-
-//     if (!coures) {
-//       // إنشاء كورس جديد إذا لم يكن موجودًا
-//       coures = await createCouresModel.create({
-//         user: req.user._id,
-//         teacher: [
-//           {
-//             name: sectionModel
-//               ? sectionModel.class.teacher.name
-//               : lactureModel.section.class.teacher.name,
-//             teacherID: sectionModel
-//               ? sectionModel.class.teacher._id
-//               : lactureModel.section.class.teacher._id,
-//           },
-//         ],
-//         couresItems: [],
-//       });
-//     }
-
-//     // إذا تم إرسال الفصل، جلب جميع المحاضرات المرتبطة به
-//     if (sectionModel) {
-//       const lectures = await createLecturesModel.find({
-//         section: req.body.section,
-//       });
-
-//       lectures.forEach((lecture) => {
-//         const lectureExistsIndex = coures.couresItems.findIndex(
-//           (item) => item.lacture._id.toString() === lecture._id.toString()
-//         );
-//         console.log(lectureExistsIndex);
-        
-//         if (lectureExistsIndex === -1) {
-//           // إضافة المحاضرة إذا لم تكن موجودة بالفعل
-//           coures.couresItems.push({
-//             lacture: lecture,
-//             teacherID: sectionModel
-//               ? sectionModel.class.teacher._id
-//               : lactureModel.section.class.teacher._id,
-//             coupon: couponModel ? couponModel.code : null,
-//             discount: couponModel ? couponModel.discount : null,
-//             ip: serverIp,
-//           });
-         
-//         } else {
-//           // إذا كانت المحاضرة موجودة بالفعل، لا يتم إجراء أي تحديث
-//           return res.status(400).json({
-//             status: "Failure",
-//             message: "Lecture already exists in the course. No update needed.",
-//           });
-//         }
-//       });
-//     } else if (lactureModel) {
-//       const lectureExistsIndex = coures.couresItems.findIndex(
-//         (item) => item.lacture._id.toString() === lactureModel._id.toString()
-//       );
-
-//       if (lectureExistsIndex === -1) {
-//         // إضافة المحاضرة إذا لم تكن موجودة بالفعل
-//         coures.couresItems.push({
-//           lacture: lactureModel,
-//           teacherID: sectionModel
-//             ? sectionModel.class.teacher._id
-//             : lactureModel.section.class.teacher._id,
-//           coupon: couponModel ? couponModel.code : null,
-//           discount: couponModel ? couponModel.discount : null,
-//           ip: serverIp,
-//         });
-//       } else {
-//         // إذا كانت المحاضرة موجودة بالفعل، لا يتم إجراء أي تحديث
-//         return res.status(400).json({
-//           status: "Failure",
-//           message: "Lecture already exists in the course. No update needed.",
-//         });
-//       }
-//     }
-
-//     const totalPriceAfterDiscount = couponModel
-//       ? (price - (price * couponModel.discount) / 100).toFixed(0)
-//       : price;
-
-//     // إنشاء المعاملة
-//     const transaction = new createTransactionModel({
-//       sender: req.user._id,
-//       receiver: sectionModel
-//         ? sectionModel.class.teacher._id
-//         : lactureModel.section.class.teacher._id,
-//       pointsSent: totalPriceAfterDiscount,
-//     });
-
-//     // تحديث نقاط المعلم والمستخدم
-//     const teacherModel = await createTeachersModel.findById(
-//       sectionModel
-//         ? sectionModel.class.teacher._id
-//         : lactureModel.section.class.teacher._id
-//     );
-//     teacherModel.point += +totalPriceAfterDiscount;
-
-//     const user = await createUsersModel.findByIdAndUpdate(
-//       req.user._id,
-//       { point: req.user.point - totalPriceAfterDiscount },
-//       { new: true }
-//     );
-
-//     // حذف الكوبون بعد استخدامه
-//     if (couponModel) {
-//       await createCouponsModel.findByIdAndDelete(couponModel._id);
-//     }
-//     user.ip = serverIp;
-
-//     // حفظ التغييرات
-//     await user.save();
-//     await transaction.save();
-//     await teacherModel.save();
-//     await coures.save();
-
-//     res.status(200).json({
-//       data: {
-//         coures,
-//         transaction,
-//       },
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// });
 exports.createCoures = expressAsyncHandler(async (req, res, next) => {
   try {
     const serverIp = getServerIp();
-
-    // العثور على المحاضرة والفصل باستخدام ID
-    const lactureModel = req.body.lacture
-      ? await createLecturesModel.findById(req.body.lacture)
-      : null;
-    const sectionModel = req.body.section
-      ? await createSectionModel.findById(req.body.section)
-      : null;
-
+    // العثور على المحاضرة باستخدام ID
+    const lactureModel = await createLecturesModel.findById(req.body.lacture);
+    const sectionModel = await createSectionModel.findById(req.body.section);
     if (!lactureModel && !sectionModel) {
       return next(new ApiError(`Course Must Be Lecture Or Section`, 500));
+    }
+    const lactureModelExtandsSection = await createLecturesModel.find({
+      section: sectionModel._id,
+    });
+    console.log(lactureModelExtandsSection);
+
+    if (!sectionModel) {
+      return next(new ApiError(`section ID Not Found`, 500));
     }
 
     // التحقق من صحة الكوبون وتاريخ انتهاء صلاحيته
@@ -315,87 +155,75 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
       code: req.body.coupon,
       expires: { $gt: Date.now() },
     });
-
-    // تحديد السعر بناءً على المحاضرة أو الفصل
-    const price = lactureModel ? lactureModel.price : sectionModel.price;
+    // if (!couponModel) {
+    //   return next(new ApiError(`Coupon is not valid: ${req.body.coupon}`, 500));
+    // }
 
     // التحقق من نقاط المستخدم
-    if (price > req.user.point) {
+    if (lactureModel.price > req.user.point) {
       return next(
         new ApiError(
-          `Price (${price}) is greater than your points (${req.user.point})`,
+          `Price Lecture: ${lactureModel.price} > Your Points ${req.user.point}`,
           500
         )
       );
     }
 
-    let coures = await createCouresModel.findOne({ user: req.user._id });
+    // حساب السعر الإجمالي بعد الخصم
+    const section = await createSectionModel.findById(lactureModel.section._id);
 
-    if (!coures) {
-      // إنشاء كورس جديد إذا لم يكن موجودًا
+    let coures = await createCouresModel.findOne({ user: req.user._id });
+    const { lacture, seaction } = req.body;
+
+    if (!coures && !couponModel) {
+      // إذا لم يكن هناك كورس، أنشئ كورس جديد
       coures = await createCouresModel.create({
         user: req.user._id,
         teacher: [
           {
-            name: sectionModel
-              ? sectionModel.class.teacher.name
-              : lactureModel.section.class.teacher.name,
-            teacherID: sectionModel
-              ? sectionModel.class.teacher._id
-              : lactureModel.section.class.teacher._id,
+            name: section.class.teacher.name,
+            teacherID: section.class.teacher._id,
           },
         ],
-        couresItems: [],
-      });
-    }
-
-    // إذا تم إرسال الفصل، جلب جميع المحاضرات المرتبطة به
-    if (sectionModel) {
-      const lectures = await createLecturesModel.find({
-        section: req.body.section,
-      });
-
-      let lecturesAdded = false;
-
-      for (const lecture of lectures) {
-        const lectureExistsIndex = coures.couresItems.findIndex(
-          (item) => item.lacture._id.toString() === lecture._id.toString()
-        );
-
-        if (lectureExistsIndex === -1) {
-          // إضافة المحاضرة إذا لم تكن موجودة بالفعل
-          coures.couresItems.push({
-            lacture: lecture,
-            teacherID: sectionModel.class.teacher._id,
+        couresItems: [
+          {
+            ip: serverIp,
+            lacture,
+            teacherID: section.class.teacher._id,
             coupon: couponModel ? couponModel.code : null,
             discount: couponModel ? couponModel.discount : null,
-            ip: serverIp,
-          });
-          lecturesAdded = true;
-        }
-      }
-
-      if (lecturesAdded) {
-        await coures.save(); // حفظ التغييرات فقط إذا تمت إضافة محاضرات جديدة
-      }
-    } else if (lactureModel) {
-      const lectureExistsIndex = coures.couresItems.findIndex(
-        (item) => item.lacture._id.toString() === lactureModel._id.toString()
+          },
+        ],
+      });
+    } else {
+      // التحقق إذا كانت المحاضرة موجودة بالفعل في الدورة
+      const courseExistsIndex = coures.couresItems.findIndex(
+        (item) => item.lacture._id.toString() === lacture.toString()
       );
 
-      if (lectureExistsIndex === -1) {
-        // إضافة المحاضرة إذا لم تكن موجودة بالفعل
+      if (courseExistsIndex === -1) {
+        // إذا لم تكن المحاضرة موجودة، أضفها إلى الدورة
         coures.couresItems.push({
-          lacture: lactureModel,
-          teacherID: sectionModel
-            ? sectionModel.class.teacher._id
-            : lactureModel.section.class.teacher._id,
+          lacture,
+          teacherID: section.class.teacher._id,
           coupon: couponModel ? couponModel.code : null,
           discount: couponModel ? couponModel.discount : null,
-          ip: serverIp,
         });
-        await coures.save(); // حفظ التغييرات فقط إذا تمت إضافة محاضرة جديدة
+
+        // التحقق من أن المعلم غير موجود بالفعل في القائمة، إذا لم يكن موجودًا، إضافته
+        const courseTeacherIndex = coures.teacher.findIndex(
+          (item) =>
+            item.teacherID.toString() === section.class.teacher._id.toString()
+        );
+
+        if (courseTeacherIndex === -1) {
+          coures.teacher.push({
+            name: section.class.teacher.name,
+            teacherID: section.class.teacher._id,
+          });
+        }
       } else {
+        // إذا كانت المحاضرة موجودة بالفعل، لا يتم إجراء أي تحديث
         return res.status(400).json({
           status: "Failure",
           message: "Lecture already exists in the course. No update needed.",
@@ -404,29 +232,33 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
     }
 
     const totalPriceAfterDiscount = couponModel
-      ? (price - (price * couponModel.discount) / 100).toFixed(0)
-      : price;
+      ? (
+          lactureModel.price -
+          (lactureModel.price * couponModel.discount) / 100
+        ).toFixed(0)
+      : lactureModel.price;
 
     // إنشاء المعاملة
     const transaction = new createTransactionModel({
       sender: req.user._id,
-      receiver: sectionModel
-        ? sectionModel.class.teacher._id
-        : lactureModel.section.class.teacher._id,
-      pointsSent: totalPriceAfterDiscount,
+      receiver: section.class.teacher._id,
+      pointsSent:
+        totalPriceAfterDiscount > 0
+          ? totalPriceAfterDiscount
+          : lactureModel.price,
     });
 
     // تحديث نقاط المعلم والمستخدم
     const teacherModel = await createTeachersModel.findById(
-      sectionModel
-        ? sectionModel.class.teacher._id
-        : lactureModel.section.class.teacher._id
+      section.class.teacher._id
     );
     teacherModel.point += +totalPriceAfterDiscount;
 
     const user = await createUsersModel.findByIdAndUpdate(
       req.user._id,
-      { point: req.user.point - totalPriceAfterDiscount },
+      {
+        point: req.user.point - totalPriceAfterDiscount,
+      },
       { new: true }
     );
 
@@ -440,6 +272,7 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
     await user.save();
     await transaction.save();
     await teacherModel.save();
+    await coures.save();
 
     res.status(200).json({
       data: {
@@ -451,7 +284,6 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
     next(error);
   }
 });
-
 
 exports.getCouress = expressAsyncHandler(async (req, res, next) => {
   const coures = await createCouresModel.findOne({ user: req.user._id });
