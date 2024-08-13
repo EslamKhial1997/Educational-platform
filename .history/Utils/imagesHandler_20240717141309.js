@@ -5,7 +5,7 @@ const { v4: uuidv4 } = require("uuid");
 const fs = require("fs");
 exports.resizeImage = (type) =>
   expressAsyncHandler(async (req, res, next) => {
-    console.log(req.file.mimetype);
+   
     if (req.file) {
       const filename = `${type}-${uuidv4()}-${Date.now()}.jpeg`;
       await sharp(req.file.buffer)

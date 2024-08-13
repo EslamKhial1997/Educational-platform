@@ -14,10 +14,10 @@ const createTeachersModel = require("../Modules/createTeacher");
 // const ApiError = require("../Resuble/ApiErrors");
 
 exports.resizeImage = expressAsyncHandler(async (req, res, next) => {
-  const imageType = req.file.mimetype.split("image/")[1];
+  const imageType = req.file?.mimetype.split("image/")[1];
     if (req.file) {
       const filename = `${type}-${uuidv4()}-${Date.now()}.${imageType ? imageType :"jpeg"}`;
-    const filename = `image-${uuidv4()}-${Date.now()}.png`;
+   
     await sharp(req.files.image[0].buffer)
       .resize(500, 750)
       .toFormat("png")
