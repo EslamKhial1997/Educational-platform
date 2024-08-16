@@ -9,6 +9,8 @@ const { fsRemove } = require("../Utils/imagesHandler");
 const factory = require("./FactoryHandler");
 const createUsersModel = require("../Modules/createUsers");
 const { UploadSingleImage } = require("../Middleware/UploadImageMiddleware");
+const sharp = require("sharp");
+const { v4: uuidv4 } = require("uuid");
 const fs = require("fs");
 
 

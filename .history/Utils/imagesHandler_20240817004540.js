@@ -1,8 +1,5 @@
 const expressAsyncHandler = require("express-async-handler");
-const {
-  UploadSingleImage,
-  UploadSinglePDF,
-} = require("../Middleware/UploadImageMiddleware");
+const { UploadSingleImage, UploadSinglePDF } = require("../Middleware/UploadImageMiddleware");
 const sharp = require("sharp");
 const { v4: uuidv4 } = require("uuid");
 const fs = require("fs");
@@ -15,14 +12,14 @@ exports.resizeImage = (type) =>
         imageType ? imageType : "jpeg"
       }`;
       await sharp(req.file.buffer)
-        .resize(1920, 1080)
+        .resize(1920, 1920)
         .toFormat(imageType)
         .toFile(`uploads/${type}/${filename}`);
       req.body.image = filename;
     }
     next();
   });
-exports.resizeImageAuth = (type) =>
+exports.resizeImage = (type) =>
   expressAsyncHandler(async (req, res, next) => {
     const imageType = req.file?.mimetype.split("image/")[1];
     if (req.file) {
@@ -30,9 +27,8 @@ exports.resizeImageAuth = (type) =>
         imageType ? imageType : "jpeg"
       }`;
       await sharp(req.file.buffer)
-        .resize(750, 750)
-        .toFormat("jpeg")
-        .jpeg({ quality: 70 })
+        .resize(1920, 1920)
+        .toFormat(imageType)
         .toFile(`uploads/${type}/${filename}`);
       req.body.image = filename;
     }
@@ -52,11 +48,7 @@ exports.fsRemove = async (filePath) => {
   });
 };
 
-exports.filePathImage = (fileName, relativePathimage) => {
-  const filePath = path.join(
-    __dirname,
-    `../uploads/${fileName}/`,
-    relativePathimage
-  );
-  this.fsRemove(filePath);
+exports.filePathImage = (fileName ,relativePathimage) => {
+ const filePath = path.join(__dirname, `../uploads/${fileName}/`, relativePathimage);
+  this.fsRemove(filePath)
 };

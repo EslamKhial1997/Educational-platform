@@ -4,7 +4,7 @@ const createLectures = new mongoose.Schema(
   {
     lecture: {
       type: String,
-     
+      required: [true, "Lecture Is Required"],
     },
     price: {
       type: Number,
@@ -14,7 +14,7 @@ const createLectures = new mongoose.Schema(
 
     video: {
       type: String,
-    
+      required: [true, "Video File Is Required"],
     },
 
     pdf: {

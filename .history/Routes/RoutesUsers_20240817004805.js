@@ -14,7 +14,7 @@ const {
   deleteUser,
   getUser,
   uploadImage,
-
+  resizeImage,
   updateLoggedUserPassword,
   getLoggedUserData,
   // updateUserPoint,
@@ -59,8 +59,8 @@ Routes.route("/:id")
   .delete(allowedTo("manager"), deleteOneUserValidator, deleteUser)
   .put(
     uploadImage,
-    updateOneUserValidator,
-    resizeImageAuth("admin"),
+    createUsersValidator,
+    resizeImage("admin"),
     updateOneUserValidator,
     updateUser
   );

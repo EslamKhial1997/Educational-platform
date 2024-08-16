@@ -9,8 +9,24 @@ const { fsRemove } = require("../Utils/imagesHandler");
 const factory = require("./FactoryHandler");
 const createUsersModel = require("../Modules/createUsers");
 const { UploadSingleImage } = require("../Middleware/UploadImageMiddleware");
+const sharp = require("sharp");
+const { v4: uuidv4 } = require("uuid");
 const fs = require("fs");
-
+exports.resizeImage = (type) =>
+  expressAsyncHandler(async (req, res, next) => {
+ 
+    const imageType = req.file?.mimetype.split("image/")[1];
+    if (req.file) {
+      const filename = `${type}-${uuidv4()}-${Date.now()}.${imageType ? imageType :"jpeg"}`;
+      await sharp(req.file.buffer)
+        .resize(750, 1333)
+        .toFormat("jpeg")
+        .jpeg({ quality: 70 })
+        .toFile(`uploads/${type}/${filename}`);
+      req.body.image = filename;
+    }
+    next();
+  });
 
 exports.uploadImage = UploadSingleImage("image");
 exports.fsRemove = async (filePath) => {

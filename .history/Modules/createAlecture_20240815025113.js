@@ -14,7 +14,7 @@ const createLectures = new mongoose.Schema(
 
     video: {
       type: String,
-    
+      required: [true, "Video File Is Required"],
     },
 
     pdf: {

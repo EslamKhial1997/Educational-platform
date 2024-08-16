@@ -14,7 +14,7 @@ exports.resizeImage = (type) =>
       const filename = `${type}-${uuidv4()}-${Date.now()}.${
         imageType ? imageType : "jpeg"
       }`;
-      await sharp(req.file.buffer)
+      await sharp(req.file.buffer)  
         .resize(1920, 1080)
         .toFormat(imageType)
         .toFile(`uploads/${type}/${filename}`);

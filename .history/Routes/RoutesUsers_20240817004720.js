@@ -14,7 +14,7 @@ const {
   deleteUser,
   getUser,
   uploadImage,
-
+  resizeImage,
   updateLoggedUserPassword,
   getLoggedUserData,
   // updateUserPoint,
@@ -24,7 +24,6 @@ const {
   //   updateUserStatus,
 } = require("../Service/UsersService");
 const { protect, allowedTo } = require("../Service/AuthService");
-const { resizeImageAuth } = require("../Utils/imagesHandler");
 // const {
 //   createUsersValidator,
 //   getOneUserValidator,
@@ -50,7 +49,7 @@ Routes.put("/changeUserPassword", UpdateUserPassword, updateLoggedUserPassword);
 
 Routes.use(allowedTo("admin", "manager"));
 Routes.route("/")
-  .post(uploadImage, createUsersValidator, resizeImageAuth("admin"), createUsers)
+  .post(uploadImage, createUsersValidator, resizeImage("admin"), createUsers)
   .get(getUsers);
 Routes.route("/verifycode").post(verifyRegister);
 // Routes.route("/addpoint/:id").put(updateUserPoint);
@@ -59,8 +58,8 @@ Routes.route("/:id")
   .delete(allowedTo("manager"), deleteOneUserValidator, deleteUser)
   .put(
     uploadImage,
-    updateOneUserValidator,
-    resizeImageAuth("admin"),
+    createUsersValidator,
+    resizeImage("admin"),
     updateOneUserValidator,
     updateUser
   );
