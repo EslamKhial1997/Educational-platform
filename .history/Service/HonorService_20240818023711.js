@@ -25,7 +25,7 @@ exports.updateHonor = expressAsyncHandler(async (req, res, next) => {
 
     // تحديث البيانات بناءً على ما إذا كانت الصورة فارغة
     const updateData =
-      req.body.image === "" ? { name: req.body.name } : req.body;
+      req.body.image === "" ? { teacher: req.body.name } : req.body;
 
     // تحديث المستند بناءً على ID
     const updateDocById = await createHonorModel.findByIdAndUpdate(

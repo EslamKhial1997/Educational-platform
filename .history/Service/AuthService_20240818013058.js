@@ -108,7 +108,7 @@ exports.allowedTo = (...roles) =>
     }
     next();
   });
-// protect middleware
+ // protect middleware
 exports.protect = expressAsyncHandler(async (req, res, next) => {
   let token;
 
@@ -138,9 +138,7 @@ exports.protect = expressAsyncHandler(async (req, res, next) => {
   }
 
   // العثور على المستخدم بناءً على الـID المستخرج من التوكن
-  const currentUser =
-    (await createUsersModel.findById(decoded.userId)) ||
-    (await createTeachersModel.findById(decoded.userId));
+  const currentUser = await createUsersModel.findById(decoded.userId) || await createTeachersModel.findById(decoded.userId);
 
   if (!currentUser) {
     return res.status(401).json({
@@ -165,19 +163,14 @@ exports.protect = expressAsyncHandler(async (req, res, next) => {
   }
 
   // تحديد الدور وتعيين النموذج المناسب
-  if (
-    currentUser.role === "user" ||
-    currentUser.role === "admin" ||
-    currentUser.role === "manager"
-  ) {
+  if (currentUser.role === "user" ||currentUser.role === "user") {
     req.model = createUsersModel;
   } else if (currentUser.role === "teacher") {
     req.model = createTeachersModel;
   } else {
     return res.status(403).json({
       statusCode: "Error",
-      message:
-        "Access denied. You do not have permission to perform this action.",
+      message: "Access denied. You do not have permission to perform this action.",
     });
   }
 
@@ -186,6 +179,11 @@ exports.protect = expressAsyncHandler(async (req, res, next) => {
   next();
 });
 
+
+
+
+  
+  
 exports.resendCodeVerify = expressAsyncHandler(async (req, res, next) => {
   const email = req.user.email;
   const user = await createUsersModel.findOne({ email: email });
@@ -217,10 +215,7 @@ exports.forgetPassword = expressAsyncHandler(async (req, res, next) => {
 
   // إنشاء كود رقمي عشوائي
   const digitCode = Math.floor(100000 + Math.random() * 900000).toString();
-  const ciphertext = crypto
-    .createHash("sha256")
-    .update(digitCode)
-    .digest("hex");
+  const ciphertext = crypto.createHash("sha256").update(digitCode).digest("hex");
 
   if (user) {
     user.code = ciphertext;
@@ -236,9 +231,7 @@ exports.forgetPassword = expressAsyncHandler(async (req, res, next) => {
 
   // إرسال الرمز للمستخدم أو المعلم
   await sendCode(req.body.email, digitCode);
-  res
-    .status(200)
-    .json({ status: "success", message: "Reset code sent successfully" });
+  res.status(200).json({ status: "success", message: "Reset code sent successfully" });
 });
 exports.restCodeSent = expressAsyncHandler(async (req, res, next) => {
   const restcode = req.body.code.toString();
@@ -281,9 +274,7 @@ exports.restNewPassword = (UserPassword) =>
     const teacher = await createTeachersModel.findOne({ email });
 
     if (!user && !teacher) {
-      return next(
-        new ApiError(`There is no user or teacher with email ${email}`, 404)
-      );
+      return next(new ApiError(`There is no user or teacher with email ${email}`, 404));
     }
 
     const target = user || teacher;

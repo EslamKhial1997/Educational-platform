@@ -83,8 +83,11 @@ exports.getMyTransaction = (Model, keyword) =>
 
 exports.getOne = (Model, populateOpt) =>
   expressAsyncHandler(async (req, res, next) => {
+  
+    
     let query = Model.findById(req.params.id);
-
+   
+    
     if (populateOpt) {
       query = query.populate(populateOpt);
     }
@@ -131,83 +134,26 @@ exports.deleteOne = (Model) =>
         "../uploads/teacher",
         relativePathAvatar
       );
-      fsRemove(filePathAvater); 
+      fsRemove(filePathAvater);
     }
     res.status(200).json({ message: "Delete Success", data: deleteDoc });
   });
-exports.updateOne = (Model) => expressAsyncHandler(async (req, res, next) => {
-  const updateDocById = await Model.findByIdAndUpdate(
-    req.params.id,
-    req.body.image === "" ? { $set: { name: req.body.name } } : req.body,
+exports.updateOne = (Model) =>
+  expressAsyncHandler(async (req, res, next) => {
+    const updateDocById = await Model.findByIdAndUpdate(
+      req.params.id,
+      req.body.image === "" ? { $set: { name: req.body.name } } : req.body,
 
-    { new: true }
-  );
-
-  if (!updateDocById)
-    next(
-      new ApiError(
-        `Sorry Can't Update This ID From ID :${req.params.id}`,
-        404
-      )
+      { new: true }
     );
-  updateDocById.save();
-  res.status(200).json({ data: updateDocById });
-});
-//   expressAsyncHandler(async (req, res, next) => {
-//   try {
-//     const baseUrl = `${process.env.BASE_URL}/gallery/`;
 
-//     // العثور على الجاليري بناءً على ID
-//     const findGallery = await createGalleryModel.findById(req.params.id);
-
-//     if (!findGallery) {
-//       return next(
-//         new ApiError(
-//           `Sorry, can't find the document with ID: ${req.params.id}`,
-//           404
-//         )
-//       );
-//     }
-
-//     // تحديث البيانات بناءً على ما إذا كانت الصورة فارغة
-//     const updateData =
-//       req.body.image === "" ? { teacher: req.body.teacher } : req.body;
-
-//     // تحديث المستند بناءً على ID
-//     const updateDocById = await createGalleryModel.findByIdAndUpdate(
-//       req.params.id,
-//       updateData,
-//       { new: true }
-//     );
-
-//     if (!updateDocById) {
-//       return next(
-//         new ApiError(
-//           `Sorry, can't update the document with ID: ${req.params.id}`,
-//           404
-//         )
-//       );
-//     }
-
-//     // التحقق مما إذا كانت الصورة القديمة مختلفة عن الصورة الجديدة
-//     if (
-//       findGallery.image &&
-//       req.body.image &&
-//       findGallery.image !== req.body.image
-//     ) {
-//       const relativePathImage = findGallery.image.split(baseUrl)[1];
-//       filePathImage("gallery", relativePathImage); // حذف الصورة القديمة
-//     }
-
-//     // تحديث مسار الصورة إذا تم توفيرها
-//     if (req.body.image) {
-//       updateDocById.image = req.body.image;
-//       await updateDocById.save();
-//     }
-
-//     res.status(200).json({ data: updateDocById });
-//   } catch (error) {
-//     next(error);
-//   }
-// });
-  
+    if (!updateDocById)
+      next(
+        new ApiError(
+          `Sorry Can't Update This ID From ID :${req.params.id}`,
+          404
+        )
+      );
+    updateDocById.save();
+    res.status(200).json({ data: updateDocById });
+  });

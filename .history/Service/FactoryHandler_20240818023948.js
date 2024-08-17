@@ -135,24 +135,7 @@ exports.deleteOne = (Model) =>
     }
     res.status(200).json({ message: "Delete Success", data: deleteDoc });
   });
-exports.updateOne = (Model) => expressAsyncHandler(async (req, res, next) => {
-  const updateDocById = await Model.findByIdAndUpdate(
-    req.params.id,
-    req.body.image === "" ? { $set: { name: req.body.name } } : req.body,
-
-    { new: true }
-  );
-
-  if (!updateDocById)
-    next(
-      new ApiError(
-        `Sorry Can't Update This ID From ID :${req.params.id}`,
-        404
-      )
-    );
-  updateDocById.save();
-  res.status(200).json({ data: updateDocById });
-});
+exports.updateOne = (Model) => 
 //   expressAsyncHandler(async (req, res, next) => {
 //   try {
 //     const baseUrl = `${process.env.BASE_URL}/gallery/`;
@@ -210,4 +193,21 @@ exports.updateOne = (Model) => expressAsyncHandler(async (req, res, next) => {
 //     next(error);
 //   }
 // });
-  
+  expressAsyncHandler(async (req, res, next) => {
+    const updateDocById = await Model.findByIdAndUpdate(
+      req.params.id,
+      req.body.image === "" ? { $set: { name: req.body.name } } : req.body,
+
+      { new: true }
+    );
+
+    if (!updateDocById)
+      next(
+        new ApiError(
+          `Sorry Can't Update This ID From ID :${req.params.id}`,
+          404
+        )
+      );
+    updateDocById.save();
+    res.status(200).json({ data: updateDocById });
+  });

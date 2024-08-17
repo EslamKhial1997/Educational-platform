@@ -9,12 +9,12 @@ exports.getHonors = factory.getAll(createHonorModel);
 exports.getHonor = factory.getOne(createHonorModel);
 exports.updateHonor = expressAsyncHandler(async (req, res, next) => {
   try {
-    const baseUrl = `${process.env.BASE_URL}/honor/`;
+    const baseUrl = `${process.env.BASE_URL}/gallery/`;
 
     // العثور على الجاليري بناءً على ID
-    const findHonor = await createHonorModel.findById(req.params.id);
+    const findGallery = await createGalleryModel.findById(req.params.id);
 
-    if (!findHonor) {
+    if (!findGallery) {
       return next(
         new ApiError(
           `Sorry, can't find the document with ID: ${req.params.id}`,
@@ -25,10 +25,10 @@ exports.updateHonor = expressAsyncHandler(async (req, res, next) => {
 
     // تحديث البيانات بناءً على ما إذا كانت الصورة فارغة
     const updateData =
-      req.body.image === "" ? { name: req.body.name } : req.body;
+      req.body.image === "" ? { teacher: req.body.teacher } : req.body;
 
     // تحديث المستند بناءً على ID
-    const updateDocById = await createHonorModel.findByIdAndUpdate(
+    const updateDocById = await createGalleryModel.findByIdAndUpdate(
       req.params.id,
       updateData,
       { new: true }
@@ -45,12 +45,12 @@ exports.updateHonor = expressAsyncHandler(async (req, res, next) => {
 
     // التحقق مما إذا كانت الصورة القديمة مختلفة عن الصورة الجديدة
     if (
-      findHonor.image &&
+      findGallery.image &&
       req.body.image &&
-      findHonor.image !== req.body.image
+      findGallery.image !== req.body.image
     ) {
-      const relativePathImage = findHonor.image.split(baseUrl)[1];
-      filePathImage("honor", relativePathImage); // حذف الصورة القديمة
+      const relativePathImage = findGallery.image.split(baseUrl)[1];
+      filePathImage("gallery", relativePathImage); // حذف الصورة القديمة
     }
 
     // تحديث مسار الصورة إذا تم توفيرها

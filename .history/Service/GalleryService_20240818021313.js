@@ -1,7 +1,7 @@
 const factory = require("./FactoryHandler");
 
 const ApiError = require("../Resuble/ApiErrors");
-const { filePathImage } = require("../Utils/imagesHandler");
+const { filePathImage, fsRemove } = require("../Utils/imagesHandler");
 const expressAsyncHandler = require("express-async-handler");
 const createGalleryModel = require("../Modules/createGallary");
 const path = require("path");
@@ -11,21 +11,7 @@ exports.getGallerys = factory.getAll(createGalleryModel);
 exports.getGallery = factory.getOne(createGalleryModel);
 exports.updateGallery = expressAsyncHandler(async (req, res, next) => {
   try {
-    const baseUrl = `${process.env.BASE_URL}/gallery/`;
-
-    // العثور على الجاليري بناءً على ID
-    const findGallery = await createGalleryModel.findById(req.params.id);
-
-    if (!findGallery) {
-      return next(
-        new ApiError(
-          `Sorry, can't find the document with ID: ${req.params.id}`,
-          404
-        )
-      );
-    }
-
-    // تحديث البيانات بناءً على ما إذا كانت الصورة فارغة
+    // تحقق إذا كانت الصورة فارغة
     const updateData =
       req.body.image === "" ? { teacher: req.body.teacher } : req.body;
 
@@ -35,6 +21,8 @@ exports.updateGallery = expressAsyncHandler(async (req, res, next) => {
       updateData,
       { new: true }
     );
+    const findGallery = await createGalleryModel.findById(
+      req.params.id,);
 
     if (!updateDocById) {
       return next(
@@ -45,14 +33,16 @@ exports.updateGallery = expressAsyncHandler(async (req, res, next) => {
       );
     }
 
-    // التحقق مما إذا كانت الصورة القديمة مختلفة عن الصورة الجديدة
+    const baseUrl = `${process.env.BASE_URL}/gallery/`;
+
+    // إذا كان هناك صورة جديدة، قم بحذف الصورة القديمة فقط إذا كانت مختلفة عن الصورة الجديدة
     if (
-      findGallery.image &&
+      updateDocById.image &&
       req.body.image &&
-      findGallery.image !== req.body.image
+      updateDocById.image.split(baseUrl)[1] !== req.body.image
     ) {
-      const relativePathImage = findGallery.image.split(baseUrl)[1];
-      filePathImage("gallery", relativePathImage); // حذف الصورة القديمة
+      const relativePathImage = updateDocById.image.replace(baseUrl, "");
+      filePathImage("gallery", relativePathImage);
     }
 
     // تحديث مسار الصورة إذا تم توفيرها

@@ -1,20 +1,22 @@
-
 const factory = require("./FactoryHandler");
+
 const ApiError = require("../Resuble/ApiErrors");
-const {  filePathImage } = require("../Utils/imagesHandler");
+const { filePathImage } = require("../Utils/imagesHandler");
 const expressAsyncHandler = require("express-async-handler");
-const createHonorModel = require("../Modules/createHonor");
-exports.createHonor = factory.createOne(createHonorModel);
-exports.getHonors = factory.getAll(createHonorModel);
-exports.getHonor = factory.getOne(createHonorModel);
-exports.updateHonor = expressAsyncHandler(async (req, res, next) => {
+const createGalleryModel = require("../Modules/createGallary");
+const path = require("path");
+
+exports.createGallery = factory.createOne(createGalleryModel);
+exports.getGallerys = factory.getAll(createGalleryModel);
+exports.getGallery = factory.getOne(createGalleryModel);
+exports.updateGallery = expressAsyncHandler(async (req, res, next) => {
   try {
-    const baseUrl = `${process.env.BASE_URL}/honor/`;
+    const baseUrl = `${process.env.BASE_URL}/gallery/`;
 
     // العثور على الجاليري بناءً على ID
-    const findHonor = await createHonorModel.findById(req.params.id);
+    const findGallery = await createGalleryModel.findById(req.params.id);
 
-    if (!findHonor) {
+    if (!findGallery) {
       return next(
         new ApiError(
           `Sorry, can't find the document with ID: ${req.params.id}`,
@@ -24,11 +26,12 @@ exports.updateHonor = expressAsyncHandler(async (req, res, next) => {
     }
 
     // تحديث البيانات بناءً على ما إذا كانت الصورة فارغة
-    const updateData =
-      req.body.image === "" ? { name: req.body.name } : req.body;
+    const updateData = req.body.image === "" 
+      ? { teacher: req.body.teacher } 
+      : req.body;
 
     // تحديث المستند بناءً على ID
-    const updateDocById = await createHonorModel.findByIdAndUpdate(
+    const updateDocById = await createGalleryModel.findByIdAndUpdate(
       req.params.id,
       updateData,
       { new: true }
@@ -45,12 +48,12 @@ exports.updateHonor = expressAsyncHandler(async (req, res, next) => {
 
     // التحقق مما إذا كانت الصورة القديمة مختلفة عن الصورة الجديدة
     if (
-      findHonor.image &&
-      req.body.image &&
-      findHonor.image !== req.body.image
+      findGallery.image && 
+      req.body.image && 
+      findGallery.image !== req.body.image
     ) {
-      const relativePathImage = findHonor.image.split(baseUrl)[1];
-      filePathImage("honor", relativePathImage); // حذف الصورة القديمة
+      const relativePathImage = findGallery.image.split(baseUrl)[1];
+      filePathImage("gallery", relativePathImage);  // حذف الصورة القديمة
     }
 
     // تحديث مسار الصورة إذا تم توفيرها
@@ -60,14 +63,15 @@ exports.updateHonor = expressAsyncHandler(async (req, res, next) => {
     }
 
     res.status(200).json({ data: updateDocById });
+
   } catch (error) {
     next(error);
   }
 });
 
-exports.deleteHonor = expressAsyncHandler(async (req, res, next) => {
-  const deleteDoc = await createHonorModel.findByIdAndDelete(req.params.id);
-  const baseUrl = `${process.env.BASE_URL}/honor/`;
+exports.deleteGallery = expressAsyncHandler(async (req, res, next) => {
+  const deleteDoc = await createGalleryModel.findByIdAndDelete(req.params.id);
+  const baseUrl = `${process.env.BASE_URL}/gallery/`;
 
   if (!deleteDoc) {
     return next(
@@ -76,7 +80,7 @@ exports.deleteHonor = expressAsyncHandler(async (req, res, next) => {
   }
   if (deleteDoc.image) {
     const relativePathimage = deleteDoc.image.replace(baseUrl, "");
-    filePathImage("Honor", relativePathimage);
+    filePathImage("gallery", relativePathimage);
   }
   res.status(200).json({ message: "Delete Success", data: deleteDoc });
 });
