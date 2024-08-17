@@ -11,17 +11,19 @@ const createUsersModel = require("../Modules/createUsers");
 const { UploadSingleImage } = require("../Middleware/UploadImageMiddleware");
 const fs = require("fs");
 
+
 exports.uploadImage = UploadSingleImage("image");
 exports.fsRemove = async (filePath) => {
-  if (!filePath) return;
-  fs.unlink(filePath, (err) => {
-    if (err) {
-      console.error(" Faild Delete:", err);
-    } else {
-      console.log("Delete Is Success in local filesystem");
-    }
-  });
-};
+    if (!filePath) return
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        console.error(" Faild Delete:", err);
+      } else {
+        console.log("Delete Is Success in local filesystem");
+      }
+    });
+  };
+
 
 exports.createUsers = expressAsyncHandler(async (req, res) => {
   req.body.password = await bcrypt.hash(req.body.password, 12);
@@ -61,8 +63,13 @@ exports.verifyRegister = expressAsyncHandler(async (req, res, next) => {
   res.status(200).json({ status: "success" });
 });
 exports.getUsers = factory.getAll(createUsersModel);
-exports.getUser = (model) => factory.getOne(model);
-exports.deleteUser = expressAsyncHandler(async (req, res, next) => {
+exports.getUser =()=>{
+  factory.getOne(createUsersModel);
+}
+
+
+
+exports.deleteUser =expressAsyncHandler(async (req, res, next) => {
   const deleteDoc = await createUsersModel.findByIdAndDelete(req.params.id);
   const baseUrl = `${process.env.BASE_URL}/admin/`;
 
@@ -82,6 +89,7 @@ exports.deleteUser = expressAsyncHandler(async (req, res, next) => {
   }
   res.status(200).json({ message: "Delete Success", data: deleteDoc });
 });
+
 
 exports.getLoggedUserData = expressAsyncHandler(async (req, res, next) => {
   req.params.id = req.user._id;
@@ -103,4 +111,55 @@ exports.updateLoggedUserPassword = expressAsyncHandler(async (req, res) => {
   console.log(user);
   res.status(200).json({ data: user, token });
 });
-exports.updateUser = factory.updateOne(createUsersModel);
+exports.updateUser = factory.updateOne(createUsersModel)
+
+//   const updatedUser = await createUsersModel.findByIdAndUpdate(
+//     req.user._id,
+//     {
+//       name: req.body.name,
+//       phone: req.body.phone,
+//       imageProfile: req.body.imageProfile,
+//     },
+//     { new: true }
+//   );
+
+//   res.status(200).json({ data: updatedUser });
+// });
+// exports.deleteLoggedUserData = expressAsyncHandler(async (req, res, next) => {
+//   await createUsersModel.findByIdAndUpdate(req.user._id, { active: false });
+
+//   res.status(204).json({ status: "Success" });
+// });
+
+// exports.updateUserRole = expressAsyncHandler(async (req, res, next) => {
+//   const user = await createUsersModel.findByIdAndUpdate(
+//     req.params.id,
+//     {
+//       role: req.body.role,
+//     },
+//     {
+//       new: true,
+//     }
+//   );
+//   if (!user) {
+//     return next(new ApiError(`User ${req.params.id} Not Found`));
+//   }
+
+//   res.status(200).json({ data: user });
+// });
+// exports.updateUserStatus = expressAsyncHandler(async (req, res, next) => {
+//   const user = await createUsersModel.findByIdAndUpdate(
+//     req.params.id,
+//     {
+//       status: req.body.status,
+//     },
+//     {
+//       new: true,
+//     }
+//   );
+//   if (!user) {
+//     return next(new ApiError(`User ${req.params.id} Not Found`));
+//   }
+
+//   res.status(200).json({ data: user });
+// });

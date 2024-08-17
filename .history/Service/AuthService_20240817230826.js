@@ -179,8 +179,11 @@ exports.protect = expressAsyncHandler(async (req, res, next) => {
   next();
 });
 
-
-
+// Route للتعامل مع getMe سواء كان User أو Teacher
+Routes.get("/getMe", protect, getLoggedUserData, (req, res, next) => {
+  const model = req.model;
+  getUser(model)(req, res, next);
+});
 
   
   

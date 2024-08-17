@@ -83,11 +83,7 @@ exports.getMyTransaction = (Model, keyword) =>
 
 exports.getOne = (Model, populateOpt) =>
   expressAsyncHandler(async (req, res, next) => {
-  
-    
     let query = Model.findById(req.params.id);
-    console.log(Model);
-    
     if (populateOpt) {
       query = query.populate(populateOpt);
     }

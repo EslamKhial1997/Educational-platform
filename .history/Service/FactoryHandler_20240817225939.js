@@ -86,7 +86,7 @@ exports.getOne = (Model, populateOpt) =>
   
     
     let query = Model.findById(req.params.id);
-    console.log(Model);
+    console.log(query);
     
     if (populateOpt) {
       query = query.populate(populateOpt);

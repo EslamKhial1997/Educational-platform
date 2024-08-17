@@ -1,11 +1,16 @@
 const { Router } = require("express");
 const {
+  createUsersValidator,
   UpdateUserPassword,
   getOneUserValidator,
 } = require("../Resuble/UsersvalidatorError");
 const {
   verifyRegister,
+
+  getUser,
   updateLoggedUserPassword,
+  getLoggedUserData,
+  updateUserPoint,
 } = require("../Service/UsersService");
 const { protect, allowedTo } = require("../Service/AuthService");
 const {

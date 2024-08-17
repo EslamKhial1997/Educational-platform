@@ -61,7 +61,10 @@ exports.verifyRegister = expressAsyncHandler(async (req, res, next) => {
   res.status(200).json({ status: "success" });
 });
 exports.getUsers = factory.getAll(createUsersModel);
-exports.getUser = (model) => factory.getOne(model);
+exports.getUser = (model) => {
+  factory.getOne(model);
+};
+
 exports.deleteUser = expressAsyncHandler(async (req, res, next) => {
   const deleteDoc = await createUsersModel.findByIdAndDelete(req.params.id);
   const baseUrl = `${process.env.BASE_URL}/admin/`;
@@ -104,3 +107,54 @@ exports.updateLoggedUserPassword = expressAsyncHandler(async (req, res) => {
   res.status(200).json({ data: user, token });
 });
 exports.updateUser = factory.updateOne(createUsersModel);
+
+//   const updatedUser = await createUsersModel.findByIdAndUpdate(
+//     req.user._id,
+//     {
+//       name: req.body.name,
+//       phone: req.body.phone,
+//       imageProfile: req.body.imageProfile,
+//     },
+//     { new: true }
+//   );
+
+//   res.status(200).json({ data: updatedUser });
+// });
+// exports.deleteLoggedUserData = expressAsyncHandler(async (req, res, next) => {
+//   await createUsersModel.findByIdAndUpdate(req.user._id, { active: false });
+
+//   res.status(204).json({ status: "Success" });
+// });
+
+// exports.updateUserRole = expressAsyncHandler(async (req, res, next) => {
+//   const user = await createUsersModel.findByIdAndUpdate(
+//     req.params.id,
+//     {
+//       role: req.body.role,
+//     },
+//     {
+//       new: true,
+//     }
+//   );
+//   if (!user) {
+//     return next(new ApiError(`User ${req.params.id} Not Found`));
+//   }
+
+//   res.status(200).json({ data: user });
+// });
+// exports.updateUserStatus = expressAsyncHandler(async (req, res, next) => {
+//   const user = await createUsersModel.findByIdAndUpdate(
+//     req.params.id,
+//     {
+//       status: req.body.status,
+//     },
+//     {
+//       new: true,
+//     }
+//   );
+//   if (!user) {
+//     return next(new ApiError(`User ${req.params.id} Not Found`));
+//   }
+
+//   res.status(200).json({ data: user });
+// });

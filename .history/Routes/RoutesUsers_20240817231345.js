@@ -38,6 +38,7 @@ Routes.route("/")
   )
   .get(getUsers);
 Routes.route("/verifycode").post(verifyRegister);
+// Routes.route("/addpoint/:id").put(updateUserPoint);
 Routes.route("/:id")
   .get(getOneUserValidator, getUser)
   .delete(allowedTo("manager"), deleteOneUserValidator, deleteUser)

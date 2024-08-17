@@ -1,11 +1,16 @@
 const { Router } = require("express");
 const {
+  createUsersValidator,
   UpdateUserPassword,
   getOneUserValidator,
 } = require("../Resuble/UsersvalidatorError");
 const {
   verifyRegister,
+
+  getUser,
   updateLoggedUserPassword,
+  getLoggedUserData,
+  updateUserPoint,
 } = require("../Service/UsersService");
 const { protect, allowedTo } = require("../Service/AuthService");
 const {
@@ -13,6 +18,7 @@ const {
   UploadImageService,
   resizeImage,
   getTeachers,
+  getTeacher,
   deleteTeacher,
   updateTeacher,
   getAllDataTeacher,
@@ -23,6 +29,7 @@ const {
   updateTeacherValidator,
 } = require("../Resuble/TeachersvalidatorError");
 const Routes = Router();
+
 Routes.put(
   "/changeUserPassword",
   protect,
@@ -41,7 +48,9 @@ Routes.route("/")
   )
   .get(getTeachers);
 Routes.route("/verifycode").post(verifyRegister);
+// Routes.route("/addpoint/:id").put(updateUserPoint);
 Routes.route("/:id")
+  // .get(getOneUserValidator, getTeacher)
   .get(getOneUserValidator, getAllDataTeacher)
   .delete(
     protect,

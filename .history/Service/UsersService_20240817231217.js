@@ -104,3 +104,4 @@ exports.updateLoggedUserPassword = expressAsyncHandler(async (req, res) => {
   res.status(200).json({ data: user, token });
 });
 exports.updateUser = factory.updateOne(createUsersModel);
+

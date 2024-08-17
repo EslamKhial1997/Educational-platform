@@ -140,7 +140,10 @@ exports.updateTeacherPoint = expressAsyncHandler(async (req, res, next) => {
   res.status(200).json({ data: updateDocById });
 });
 exports.getMeTeacher = factory.getOne(createTeachersModel);
-
+exports.getLoggedTeacherData = expressAsyncHandler(async (req, res, next) => {
+  req.params.id = req.Teacher._id;
+  next();
+});
 exports.updateLoggedTeacherPassword = expressAsyncHandler(async (req, res) => {
   const Teacher = await createTeachersModel.findByIdAndUpdate(
     req.Teacher._id,

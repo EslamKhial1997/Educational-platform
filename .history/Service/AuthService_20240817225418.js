@@ -108,81 +108,72 @@ exports.allowedTo = (...roles) =>
     }
     next();
   });
- // protect middleware
-exports.protect = expressAsyncHandler(async (req, res, next) => {
-  let token;
-
-  // استخراج التوكن من الهيدر
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
-    token = req.headers.authorization.split(" ")[1];
-  }
-
-  // التحقق من وجود التوكن
-  if (!token) {
-    return res.status(401).json({
-      statusCode: "Error",
-      message: "Invalid token. Please login again.",
-    });
-  }
-
-  // التحقق من صحة التوكن
-  const decoded = jwt.verify(token, process.env.DB_URL);
-  if (!decoded) {
-    return res.status(401).json({
-      statusCode: "Error",
-      message: "Invalid token. Please login again.",
-    });
-  }
-
-  // العثور على المستخدم بناءً على الـID المستخرج من التوكن
-  const currentUser = await createUsersModel.findById(decoded.userId) || await createTeachersModel.findById(decoded.userId);
-
-  if (!currentUser) {
-    return res.status(401).json({
-      statusCode: "Error",
-      message: "User or Teacher not found.",
-    });
-  }
-
-  // التحقق مما إذا قام المستخدم بتغيير كلمة المرور بعد إصدار التوكن
-  if (currentUser.passwordChangedAt) {
-    const passChangedTimestamp = parseInt(
-      currentUser.passwordChangedAt.getTime() / 1000,
-      10
-    );
-    // إذا تم تغيير كلمة المرور بعد إنشاء التوكن
-    if (passChangedTimestamp > decoded.iat) {
+  exports.protect = expressAsyncHandler(async (req, res, next) => {
+    let token;
+  
+    // استخراج التوكن من الهيدر
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith("Bearer")
+    ) {
+      token = req.headers.authorization.split(" ")[1];
+    }
+  
+    // التحقق من وجود التوكن
+    if (!token) {
       return res.status(401).json({
         statusCode: "Error",
-        message: "User recently changed his password. Please login again.",
+        message: "Invalid token. Please login again.",
       });
     }
-  }
-
-  // تحديد الدور وتعيين النموذج المناسب
-  if (currentUser.role === "user") {
-    req.model = createUsersModel;
-  } else if (currentUser.role === "teacher") {
-    req.model = createTeachersModel;
-  } else {
-    return res.status(403).json({
-      statusCode: "Error",
-      message: "Access denied. You do not have permission to perform this action.",
-    });
-  }
-
-  req.user = currentUser;
-
-  next();
-});
-
-
-
-
   
+    // التحقق من صحة التوكن
+    const decoded = jwt.verify(token, process.env.DB_URL);
+    if (!decoded) {
+      return res.status(401).json({
+        statusCode: "Error",
+        message: "Invalid token. Please login again.",
+      });
+    }
+  
+    // العثور على المستخدم بناءً على الـID المستخرج من التوكن
+    const currentUser = await createUsersModel.findById(decoded.userId);
+    const currentUser = await createUsersModel.findById(decoded.userId);
+    if (!currentUser) {
+      return res.status(401).json({
+        statusCode: "Error",
+        message: "User not found.",
+      });
+    }
+  
+    // التحقق مما إذا قام المستخدم بتغيير كلمة المرور بعد إصدار التوكن
+    if (currentUser.passwordChangedAt) {
+      const passChangedTimestamp = parseInt(
+        currentUser.passwordChangedAt.getTime() / 1000,
+        10
+      );
+      // إذا تم تغيير كلمة المرور بعد إنشاء التوكن
+      if (passChangedTimestamp > decoded.iat) {
+        return res.status(401).json({
+          statusCode: "Error",
+          message: "User recently changed his password. Please login again.",
+        });
+      }
+    }
+  
+    // تحديد الدور (teacher أو user)
+    if (currentUser.role !== "user" && currentUser.role !== "teacher") {
+      return res.status(403).json({
+        statusCode: "Error",
+        message: "Access denied. You do not have permission to perform this action.",
+      });
+    }
+  
+    // تعيين المستخدم في الطلب (req) لمزيد من الاستخدام
+    req.user = currentUser;
+  
+    next();
+  });
   
 exports.resendCodeVerify = expressAsyncHandler(async (req, res, next) => {
   const email = req.user.email;
