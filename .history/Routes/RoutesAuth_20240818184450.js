@@ -27,4 +27,5 @@ Routes.route("/login").post(LoginValidator, Login);
 Routes.post("/forgetPassword", forgetPassword);
 Routes.post("/restCode", restCodeSent);
 Routes.put("/setNewPassword", restNewPassword("password"));
+
 module.exports = Routes;

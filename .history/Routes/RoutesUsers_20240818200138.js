@@ -23,7 +23,6 @@ const {
   getLoggedUserData,
 } = require("../Service/AuthService");
 const { resizeImageAuth } = require("../Utils/imagesHandler");
-const createUsersModel = require("../Modules/createUsers");
 
 const Routes = Router();
 Routes.use(protect);
@@ -50,7 +49,7 @@ Routes.route("/")
   .get(getUsers);
 Routes.route("/verifycode").post(verifyRegister);
 Routes.route("/:id")
-  .get(getOneUserValidator, getUser(createUsersModel))
+  .get(protect,getOneUserValidator, getUser)
   .delete(allowedTo("manager"), deleteOneUserValidator, deleteUser)
   .put(
     uploadImage,

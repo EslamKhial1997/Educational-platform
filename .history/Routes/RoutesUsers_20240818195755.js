@@ -16,14 +16,10 @@ const {
   uploadImage,
 
   updateLoggedUserPassword,
+
 } = require("../Service/UsersService");
-const {
-  protect,
-  allowedTo,
-  getLoggedUserData,
-} = require("../Service/AuthService");
+const { protect, allowedTo, getLoggedUserData } = require("../Service/AuthService");
 const { resizeImageAuth } = require("../Utils/imagesHandler");
-const createUsersModel = require("../Modules/createUsers");
 
 const Routes = Router();
 Routes.use(protect);
@@ -33,6 +29,7 @@ Routes.get("/getMe", getLoggedUserData, (req, res, next) => {
 });
 Routes.put(
   "/updateMe",
+  protect,
   uploadImage,
   resizeImageAuth("admin"),
   getLoggedUserData,
@@ -50,7 +47,7 @@ Routes.route("/")
   .get(getUsers);
 Routes.route("/verifycode").post(verifyRegister);
 Routes.route("/:id")
-  .get(getOneUserValidator, getUser(createUsersModel))
+  .get(getOneUserValidator, getUser)
   .delete(allowedTo("manager"), deleteOneUserValidator, deleteUser)
   .put(
     uploadImage,

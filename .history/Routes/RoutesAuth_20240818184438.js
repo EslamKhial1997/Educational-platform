@@ -17,6 +17,13 @@ const {
   createUsersValidator,
 } = require("../Resuble/UsersvalidatorError");
 
+// const {
+//   createUsersValidator,
+//   getOneUserValidator,
+//   updateOneUserValidator,
+//   deleteOneUserValidator,
+//   UpdateUserPassword,
+// } = require("../Resuble/UsersvalidatorError");
 
 const Routes = Router();
 
@@ -27,4 +34,7 @@ Routes.route("/login").post(LoginValidator, Login);
 Routes.post("/forgetPassword", forgetPassword);
 Routes.post("/restCode", restCodeSent);
 Routes.put("/setNewPassword", restNewPassword("password"));
+
+//   .put(uploadImage,resizeImageUsers,updateOneUserValidator, updateUser)
+//   .delete(deleteOneUserValidator, deleteUser);
 module.exports = Routes;
