@@ -1,0 +1,11 @@
+const factory = require("./FactoryHandler");
+const createClassModel = require("../Modules/createClasses");
+const expressAsyncHandler = require("express-async-handler");
+const path = require("path");
+const ApiError = require("../Resuble/ApiErrors");
+const { fsRemove } = require("../Utils/imagesHandler");
+exports.createClasses = factory.createOne(createClassModel);
+exports.getClassess = factory.getAll(createClassModel);
+exports.getClass = factory.getOne(createClassModel);
+exports.updateClass = factory.updateOne(createClassModel, "class");
+exports.deleteClass =
