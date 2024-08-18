@@ -1,0 +1,21 @@
+
+//teacher
+//66c21ccc20db7849079d606d المحمدي
+//66c21d5320db7849079d6075 براهيم
+//66c21dab20db7849079d607d حسن
+
+//class
+//66c21fa0f13f169f0cef031f 
+//66c21fe8f13f169f0cef0337 
+//66c22020f13f169f0cef034f 
+
+
+//Section
+//66c221eaf13f169f0cef03d8
+//66c22105f13f169f0cef03b4
+//66c22268f13f169f0cef03ea
+
+//lecture 
+
+//66c2261bfb0f653f04a39223
+//66c223f1f13f169f0cef0584
