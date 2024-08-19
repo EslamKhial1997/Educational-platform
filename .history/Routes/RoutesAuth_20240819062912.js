@@ -13,7 +13,6 @@ const {
 const {
   verifyRegister,
 } = require("../Service/UsersService");
-const { createUsersValidator } = require("../Resuble/UsersvalidatorError");
 
 
 const Routes = Router();

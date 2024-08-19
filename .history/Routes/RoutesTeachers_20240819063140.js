@@ -19,7 +19,7 @@ const {
   deleteOneTeacherValidator,
   updateTeacherValidator,
 } = require("../Resuble/TeachersvalidatorError");
-const { UpdateUserPassword, getOneUserValidator } = require("../Resuble/UsersvalidatorError");
+const { UpdateUserPassword } = require("../Resuble/UsersvalidatorError");
 const Routes = Router();
 Routes.put(
   "/changeUserPassword",

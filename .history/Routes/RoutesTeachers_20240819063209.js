@@ -19,7 +19,7 @@ const {
   deleteOneTeacherValidator,
   updateTeacherValidator,
 } = require("../Resuble/TeachersvalidatorError");
-const { UpdateUserPassword, getOneUserValidator } = require("../Resuble/UsersvalidatorError");
+const { UpdateUserPassword } = require("../Resuble/UsersvalidatorError");
 const Routes = Router();
 Routes.put(
   "/changeUserPassword",
@@ -40,7 +40,7 @@ Routes.route("/")
   .get(getTeachers);
 Routes.route("/verifycode").post(verifyRegister);
 Routes.route("/:id")
-  .get(getOneUserValidator, getAllDataTeacher)
+  .get(getOne, getAllDataTeacher)
   .delete(
     protect,
     allowedTo("manager"),

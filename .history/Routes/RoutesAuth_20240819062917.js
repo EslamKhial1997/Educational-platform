@@ -13,12 +13,11 @@ const {
 const {
   verifyRegister,
 } = require("../Service/UsersService");
-const { createUsersValidator } = require("../Resuble/UsersvalidatorError");
 
 
 const Routes = Router();
 
-Routes.route("/signup").post(createUsersValidator, SingUp);
+Routes.route("/signup").post(createuser, SingUp);
 Routes.route("/verifycode").post(verifyRegister);
 Routes.route("/resendVerifycode").post(protect, resendCodeVerify);
 Routes.route("/login").post(LoginValidator, Login);
