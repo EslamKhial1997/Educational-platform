@@ -212,10 +212,11 @@ exports.deleteOne = (Model, filePath) =>
       await Model.findByIdAndDelete(req.params.id);
 
       // قائمة بالمفاتيح التي قد تحتوي على مسارات الصور
-      const imageKeys = ["image", "avater", "picture" , "pdf"];
+      const imageKeys = ["image", "avater", "picture" , ];
 
       // تحقق من كل مفتاح في المستند المحذوف وقم بحذف الصورة القديمة إذا لزم الأمر
       for (const key of imageKeys) {
+        console.log(findDocument[key]);
         if (findDocument[key]) {
           const relativePathImage = findDocument[key].split(baseUrl)[1];
           filePathImage(filePath, relativePathImage); // حذف الصورة القديمة

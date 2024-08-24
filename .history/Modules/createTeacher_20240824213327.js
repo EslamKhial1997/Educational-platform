@@ -42,7 +42,7 @@ const createTeachers = new mongoose.Schema(
     avater: {
       type: String,
     },
-    key: {
+    avater: {
       type: String,
     },
 

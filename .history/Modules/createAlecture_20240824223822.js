@@ -14,7 +14,7 @@ const createLectures = new mongoose.Schema(
     video: {
       type: String,
     },
-    description: {
+    viddeeo: {
       type: String,
     },
     bunny: {

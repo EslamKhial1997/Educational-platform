@@ -18,9 +18,8 @@ exports.createLectures = expressAsyncHandler(async (req, res) => {
     const section = await createSectionModel
       .findById(req.body.section)
       .then((e) => e.class.teacher._id);
-    const teacherKey = await createTeachersModel
-      .findById(section)
-      .then((e) => e.key);
+    const teacher = await createTeachersModel.findById(section).then((e) => e.class.teacher);
+    console.log(teacher.key);
 
     await axios
       .post(
@@ -38,14 +37,13 @@ exports.createLectures = expressAsyncHandler(async (req, res) => {
         req.body.bunny = {
           videoLibraryId: response.data.videoLibraryId,
           guid: response.data.guid,
-          key: teacherKey,
         };
 
         const createDoc = await createLecturesModel.create(req.body);
 
         res.status(201).json({ data: createDoc });
       });
-  } catch (error) { 
+  } catch (error) {
     console.error("Error uploading file:", error.message);
     res.status(500).send({ error: "Failed to upload video" });
   }
@@ -53,5 +51,5 @@ exports.createLectures = expressAsyncHandler(async (req, res) => {
 
 exports.getLectures = factory.getAll(createLecturesModel);
 exports.getLecture = factory.getOne(createLecturesModel);
-exports.updateLecture = factory.updateOne(createLecturesModel, "lecture");
-exports.deleteLecture = factory.deleteOne(createLecturesModel, "lecture");
+exports.updateLecture = factory.updateOne(createLecturesModel);
+exports.deleteLecture = factory.deleteOne(createLecturesModel);

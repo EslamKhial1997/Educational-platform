@@ -216,6 +216,7 @@ exports.deleteOne = (Model, filePath) =>
 
       // تحقق من كل مفتاح في المستند المحذوف وقم بحذف الصورة القديمة إذا لزم الأمر
       for (const key of imageKeys) {
+        console.log(findDocument[key]);
         if (findDocument[key]) {
           const relativePathImage = findDocument[key].split(baseUrl)[1];
           filePathImage(filePath, relativePathImage); // حذف الصورة القديمة

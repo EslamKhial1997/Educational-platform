@@ -45,7 +45,7 @@ exports.createLectures = expressAsyncHandler(async (req, res) => {
 
         res.status(201).json({ data: createDoc });
       });
-  } catch (error) { 
+  } catch (error) {
     console.error("Error uploading file:", error.message);
     res.status(500).send({ error: "Failed to upload video" });
   }

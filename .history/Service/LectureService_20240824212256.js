@@ -3,8 +3,6 @@ const fs = require("fs");
 const axios = require("axios");
 const createLecturesModel = require("../Modules/createAlecture");
 const expressAsyncHandler = require("express-async-handler");
-const createSectionModel = require("../Modules/createSection");
-const createTeachersModel = require("../Modules/createTeacher");
 
 exports.resizeImage = expressAsyncHandler(async (req, res, next) => {
   if (req.file) {
@@ -15,13 +13,7 @@ exports.resizeImage = expressAsyncHandler(async (req, res, next) => {
 });
 exports.createLectures = expressAsyncHandler(async (req, res) => {
   try {
-    const section = await createSectionModel
-      .findById(req.body.section)
-      .then((e) => e.class.teacher._id);
-    const teacherKey = await createTeachersModel
-      .findById(section)
-      .then((e) => e.key);
-
+    
     await axios
       .post(
         "https://video.bunnycdn.com/library/289633/videos",
@@ -38,14 +30,13 @@ exports.createLectures = expressAsyncHandler(async (req, res) => {
         req.body.bunny = {
           videoLibraryId: response.data.videoLibraryId,
           guid: response.data.guid,
-          key: teacherKey,
         };
 
         const createDoc = await createLecturesModel.create(req.body);
 
         res.status(201).json({ data: createDoc });
       });
-  } catch (error) { 
+  } catch (error) {
     console.error("Error uploading file:", error.message);
     res.status(500).send({ error: "Failed to upload video" });
   }
@@ -53,5 +44,5 @@ exports.createLectures = expressAsyncHandler(async (req, res) => {
 
 exports.getLectures = factory.getAll(createLecturesModel);
 exports.getLecture = factory.getOne(createLecturesModel);
-exports.updateLecture = factory.updateOne(createLecturesModel, "lecture");
-exports.deleteLecture = factory.deleteOne(createLecturesModel, "lecture");
+exports.updateLecture = factory.updateOne(createLecturesModel);
+exports.deleteLecture = factory.deleteOne(createLecturesModel);
