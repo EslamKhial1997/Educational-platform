@@ -2,13 +2,16 @@ const mongoose = require("mongoose");
 
 const createUsers = new mongoose.Schema(
   {
-    username: {
+    name: {
       type: String,
       required: [true, "Required Name User"],
       minlength: [3, "Name Too Short To Create"],
       maxlength: [32, "Name Too long To Create"],
     },
     slug: {
+      type: String,
+    },
+    address: {
       type: String,
     },
     email: {
@@ -28,12 +31,6 @@ const createUsers = new mongoose.Schema(
       required: [true, "Required Phone User"],
       unique: [true, "Phone Must Be Unique"],
     },
-  
-    guardianPhone: {
-    
-      unique: [true, "Guardian Phone Must Be Unique"],
-      type: Number,
-    },
     image: {
       type: String,
     },
@@ -46,10 +43,10 @@ const createUsers = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["user" , "admin" , "manager"],
+      enum: ["user", "admin", "manager"],
       default: "user",
     },
-  
+
     grade: {
       type: String,
       enum: ["first", "second", "third"],
@@ -66,6 +63,8 @@ const createUsers = new mongoose.Schema(
     codeExpires: {
       type: String,
     },
+    ip: String,
+    operatingSystem: [],
   },
   { timestamps: true }
 );

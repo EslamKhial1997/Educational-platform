@@ -11,7 +11,7 @@ const createUsers = new mongoose.Schema(
     slug: {
       type: String,
     },
-    city: {
+    address: {
       type: String,
     },
     email: {
