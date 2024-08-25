@@ -21,8 +21,7 @@ exports.createLectures = expressAsyncHandler(async (req, res) => {
     const teacherKey = await createTeachersModel
       .findById(section)
       .then((e) => e );
-
-console.log(teacherKey.key);
+console.log(teacherKey);
 
     await axios
       .post(
@@ -40,7 +39,7 @@ console.log(teacherKey.key);
         req.body.bunny = {
           videoLibraryId: response.data.videoLibraryId,
           guid: response.data.guid,
-          key: teacherKey.key,
+          key: teacherKey,
         };
 
         const createDoc = await createLecturesModel.create(req.body);

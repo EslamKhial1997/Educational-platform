@@ -13,7 +13,6 @@ const createLectures = new mongoose.Schema(
 
     video: {
       type: Boolean,
-      default: false,
     },
     description: {
       type: String,

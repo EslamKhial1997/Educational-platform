@@ -21,18 +21,17 @@ exports.createLectures = expressAsyncHandler(async (req, res) => {
     const teacherKey = await createTeachersModel
       .findById(section)
       .then((e) => e );
-
-console.log(teacherKey.key);
+console.log(teacherKey);
 
     await axios
       .post(
-        `https://video.bunnycdn.com/library/${teacherKey.libraryID}/videos`,
+        `https://video.bunnycdn.com/library/${teacherKey}/videos`,
         { title: req.body.lecture },
         {
           headers: {
             accept: "application/json",
             "content-type": "application/json",
-            AccessKey: teacherKey.key,
+            AccessKey: "d0b87ec7-1ee5-4df3-8fbdaa4ddb32-2958-4dd0",
           },
         }
       )
@@ -40,7 +39,7 @@ console.log(teacherKey.key);
         req.body.bunny = {
           videoLibraryId: response.data.videoLibraryId,
           guid: response.data.guid,
-          key: teacherKey.key,
+          key: teacherKey,
         };
 
         const createDoc = await createLecturesModel.create(req.body);
