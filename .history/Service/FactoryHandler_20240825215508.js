@@ -96,9 +96,9 @@ exports.getOne = (Model, populateOpt) =>
       );
     res.status(200).json({ data: getDocById });
   });
-exports.getOneCourse = (Model, populateOpt) =>
+exports.getMyCourse = (Model, populateOpt) =>
   expressAsyncHandler(async (req, res, next) => {
-    let query = Model.findOne({user:req.user.id});
+    let query = Model.find({user:req.user.id});
 
     if (populateOpt) {
       query = query.populate(populateOpt);
@@ -109,7 +109,6 @@ exports.getOneCourse = (Model, populateOpt) =>
         new ApiError(`Sorry Can't get This ID From ID :${req.user.id}`, 404)
       );
       res.status(201).json({
-        results: getDocById.couresItems.length,
         data: getDocById,
   
       });
