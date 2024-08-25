@@ -134,7 +134,7 @@ exports.getOne = (Model, populateOpt) =>
 // });
 exports.updateOne = (Model, filePath) =>
   expressAsyncHandler(async (req, res, next) => {
-    console.log(filePath , req.body.pdf ,Model);
+    console.log(filePath , req.body);
     
     try {
       const baseUrl = `${process.env.BASE_URL}/${filePath}/`;

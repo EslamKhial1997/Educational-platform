@@ -37,9 +37,8 @@ Routes.route("/:id")
   .put(
     protect,
     allowedTo("admin", "manager"),
-    uploadPDF,
+    uploadPDF
     updateLectureValidator,
-    resizeImage,
     updateLecture
   )
   .delete(

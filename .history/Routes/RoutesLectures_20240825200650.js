@@ -39,7 +39,6 @@ Routes.route("/:id")
     allowedTo("admin", "manager"),
     uploadPDF,
     updateLectureValidator,
-    resizeImage,
     updateLecture
   )
   .delete(
