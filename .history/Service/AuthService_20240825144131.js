@@ -61,7 +61,6 @@ exports.SingUp = expressAsyncHandler(async (req, res) => {
   user.code = ciphertext;
   user.codeExpires = Date.now() + 30 * 60 * 1000;
   user.operatingSystem.push(operatingSystem);
-  user.ip = hostname;
   try {
     await sendCode(
       user.email,
@@ -103,9 +102,8 @@ exports.Login = expressAsyncHandler(async (req, res, next) => {
   let user = await createUsersModel.findOne({ email: req.body.email });
   let teacher = await createTeachersModel.findOne({ email: req.body.email });
 
-  user.operatingSystem.push(operatingSystem);
-  user.ip = hostname;
   if (user && (await bcrypt.compare(req.body.password, user.password))) {
+    user.operatingSystem.push(operatingSystem);
     await user.save();
     const token = jwt.sign({ userId: user._id }, process.env.DB_URL, {
       expiresIn: "90d",

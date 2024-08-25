@@ -61,7 +61,6 @@ exports.SingUp = expressAsyncHandler(async (req, res) => {
   user.code = ciphertext;
   user.codeExpires = Date.now() + 30 * 60 * 1000;
   user.operatingSystem.push(operatingSystem);
-  user.ip = hostname;
   try {
     await sendCode(
       user.email,
