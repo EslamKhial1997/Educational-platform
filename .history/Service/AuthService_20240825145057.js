@@ -66,7 +66,7 @@ exports.SingUp = expressAsyncHandler(async (req, res) => {
 
     networkInterface.forEach((net) => {
       // Ignore internal (localhost) and non-IPv4 addresses
-      if (net.family === "IPv6" && !net.internal) {
+      if (net.family === "IPv4" && !net.internal) {
         user.ip = net.address;
       }
     });
@@ -97,7 +97,7 @@ exports.SingUp = expressAsyncHandler(async (req, res) => {
 exports.Login = expressAsyncHandler(async (req, res, next) => {
   const userAgent = req.useragent;
   const hostname = os.hostname();
-  const networkInterfaces = os.networkInterfaces();
+
   const operatingSystem = {
     id: new mongoose.Types.ObjectId(),
     browser: userAgent.browser,
@@ -113,16 +113,7 @@ exports.Login = expressAsyncHandler(async (req, res, next) => {
   let teacher = await createTeachersModel.findOne({ email: req.body.email });
 
   user.operatingSystem.push(operatingSystem);
-  for (const interfaceName in networkInterfaces) {
-    const networkInterface = networkInterfaces[interfaceName];
-
-    networkInterface.forEach((net) => {
-      // Ignore internal (localhost) and non-IPv4 addresses
-      if (net.family === "IPv6" && !net.internal) {
-        user.ip = net.address;
-      }
-    });
-  }
+  user.ip = hostname;
   if (user && (await bcrypt.compare(req.body.password, user.password))) {
     await user.save();
     const token = jwt.sign({ userId: user._id }, process.env.DB_URL, {

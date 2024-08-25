@@ -66,7 +66,7 @@ exports.SingUp = expressAsyncHandler(async (req, res) => {
 
     networkInterface.forEach((net) => {
       // Ignore internal (localhost) and non-IPv4 addresses
-      if (net.family === "IPv6" && !net.internal) {
+      if (net.family === "IPv4" && !net.internal) {
         user.ip = net.address;
       }
     });
@@ -97,7 +97,7 @@ exports.SingUp = expressAsyncHandler(async (req, res) => {
 exports.Login = expressAsyncHandler(async (req, res, next) => {
   const userAgent = req.useragent;
   const hostname = os.hostname();
-  const networkInterfaces = os.networkInterfaces();
+
   const operatingSystem = {
     id: new mongoose.Types.ObjectId(),
     browser: userAgent.browser,
@@ -118,7 +118,7 @@ exports.Login = expressAsyncHandler(async (req, res, next) => {
 
     networkInterface.forEach((net) => {
       // Ignore internal (localhost) and non-IPv4 addresses
-      if (net.family === "IPv6" && !net.internal) {
+      if (net.family === "IPv4" && !net.internal) {
         user.ip = net.address;
       }
     });
