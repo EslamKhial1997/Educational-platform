@@ -183,7 +183,7 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
 });
 
 
-exports.getCoures = factory.getOneCourse(createCouresModel);
+exports.getCoures = expre;
 exports.deleteCourses = factory.deleteOne(createCouresModel);
 exports.deleteSpecificCourseItem = expressAsyncHandler(
   async (req, res, next) => {

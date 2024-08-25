@@ -34,7 +34,7 @@ exports.getAll = (Model, keyword) =>
     const { MongooseQueryApi, PaginateResult } = ApiFeatures;
     const getDoc = await MongooseQueryApi;
     console.log(getDoc);
-    
+
     res
       .status(201)
       .json({ results: getDoc.length, PaginateResult, data: getDoc });
@@ -98,23 +98,18 @@ exports.getOne = (Model, populateOpt) =>
   });
 exports.getOneCourse = (Model, populateOpt) =>
   expressAsyncHandler(async (req, res, next) => {
-    let query = Model.find({user:req.user.id});
+    let query = Model.find({ user: req. });
 
-    if (populateOpt) {
-      query = query.populate(populateOpt);
-    }
+ 
     const getDocById = await query;
     if (!getDocById)
       next(
-        new ApiError(`Sorry Can't get This ID From ID :${req.user.id}`, 404)
+        new ApiError(`Sorry Can't get This ID From ID :${req.params.id}`, 404)
       );
-      res.status(201).json({
-        data: getDocById,
-  
-      });
+    res.status(200).json({ data: getDocById });
   });
 
-
+//   const deleteDoc = await Model.findByIdAndDelete(req.params.id);
 //   const baseUrl = `${process.env.BASE_URL}/teacher/`;
 
 //   if (!deleteDoc) {

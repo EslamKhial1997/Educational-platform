@@ -182,8 +182,15 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
   }
 });
 
+exports.getCoures = expressAsyncHandler(async (req, res, next) => {
+  let courseItem = await createCouresModel.find({ user: req.user.id });
 
-exports.getCoures = factory.getOneCourse(createCouresModel);
+  if (!courseItem)
+    next(
+      new ApiError(`Sorry Can't get This ID From ID :${req.params.id}`, 404)
+    );
+  res.status(200).json({ data: courseItem });
+});
 exports.deleteCourses = factory.deleteOne(createCouresModel);
 exports.deleteSpecificCourseItem = expressAsyncHandler(
   async (req, res, next) => {

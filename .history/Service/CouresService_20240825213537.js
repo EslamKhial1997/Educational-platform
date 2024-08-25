@@ -183,7 +183,19 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
 });
 
 
-exports.getCoures = factory.getOneCourse(createCouresModel);
+exports.getCoures = expressAsyncHandler(()=>)
+(Model, populateOpt) =>
+  expressAsyncHandler(async (req, res, next) => {
+    let query = Model.find({ user: req.user.id });
+
+ 
+    const getDocById = await query;
+    if (!getDocById)
+      next(
+        new ApiError(`Sorry Can't get This ID From ID :${req.params.id}`, 404)
+      );
+    res.status(200).json({ data: getDocById });
+  });;
 exports.deleteCourses = factory.deleteOne(createCouresModel);
 exports.deleteSpecificCourseItem = expressAsyncHandler(
   async (req, res, next) => {

@@ -106,11 +106,13 @@ exports.getOneCourse = (Model, populateOpt) =>
     const getDocById = await query;
     if (!getDocById)
       next(
-        new ApiError(`Sorry Can't get This ID From ID :${req.user.id}`, 404)
+        new ApiError(`Sorry Can't get This ID From ID :${req.params.id}`, 404)
       );
       res.status(201).json({
-        data: getDocById,
-  
+        results: getDoc.length,
+        PaginateResult,
+        data: getDoc,
+        totalPoints: total, // إضافة مجموع النقاط إلى الاستجابة
       });
   });
 

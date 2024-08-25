@@ -109,8 +109,10 @@ exports.getOneCourse = (Model, populateOpt) =>
         new ApiError(`Sorry Can't get This ID From ID :${req.user.id}`, 404)
       );
       res.status(201).json({
-        data: getDocById,
-  
+        results: getDoc.length,
+        PaginateResult,
+        data: getDoc,
+        totalPoints: total, // إضافة مجموع النقاط إلى الاستجابة
       });
   });
 

@@ -106,15 +106,12 @@ exports.getOneCourse = (Model, populateOpt) =>
     const getDocById = await query;
     if (!getDocById)
       next(
-        new ApiError(`Sorry Can't get This ID From ID :${req.user.id}`, 404)
+        new ApiError(`Sorry Can't get This ID From ID :${req.params.id}`, 404)
       );
-      res.status(201).json({
-        data: getDocById,
-  
-      });
+      getDocById
   });
 
-
+//   const deleteDoc = await Model.findByIdAndDelete(req.params.id);
 //   const baseUrl = `${process.env.BASE_URL}/teacher/`;
 
 //   if (!deleteDoc) {

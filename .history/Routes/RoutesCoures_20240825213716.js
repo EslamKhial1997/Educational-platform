@@ -7,6 +7,7 @@ const {
 const {
   createCoures,
   getCoures,
+  getCouress,
   deleteSpecificCourseItem,
   updateSpecificCourseItemSeen,
 } = require("../Service/CouresService");
