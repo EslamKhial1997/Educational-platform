@@ -34,7 +34,7 @@ exports.getAll = (Model, keyword) =>
     const { MongooseQueryApi, PaginateResult } = ApiFeatures;
     const getDoc = await MongooseQueryApi;
     console.log(getDoc);
-
+    
     res
       .status(201)
       .json({ results: getDoc.length, PaginateResult, data: getDoc });
@@ -98,18 +98,21 @@ exports.getOne = (Model, populateOpt) =>
   });
 exports.getOneCourse = (Model, populateOpt) =>
   expressAsyncHandler(async (req, res, next) => {
-    let query = Model.findOne({ user: req.user.id });
+    let query = Model.findOne({user:req.user.id});
 
     if (populateOpt) {
       query = query.populate(populateOpt);
     }
     const getDocById = await query;
-
-    res.status(201).json({
-      results: getDocById.couresItems.length,
-      data: getDocById,
-    });
+   
+      res.status(201).json({
+        results: getDocById.couresItems.length,
+        data: getDocById,
+  
+      });
   });
+
+
 
 exports.updateOne = (Model, filePath) =>
   expressAsyncHandler(async (req, res, next) => {
