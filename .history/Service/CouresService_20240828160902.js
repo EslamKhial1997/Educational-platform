@@ -7,13 +7,25 @@ const createCouponsModel = require("../Modules/createCoupon");
 const createTransactionModel = require("../Modules/createtransaction");
 const createTeachersModel = require("../Modules/createTeacher");
 const createUsersModel = require("../Modules/createUsers");
+const os = require("os");
 const createSectionModel = require("../Modules/createSection");
 
-
+// function getServerIp() {
+//   const networkInterfaces = os.networkInterfaces();
+//   for (const interfaceName in networkInterfaces) {
+//     const networkInterface = networkInterfaces[interfaceName];
+//     for (const net of networkInterface) {
+//       if (net.mac && net.mac !== '00:00:00:00:00:00') {
+//         return  net.mac;
+//       }
+//     }
+//   }
+//   return "Unable to determine server IP";
+// }
 
 exports.createCoures = expressAsyncHandler(async (req, res, next) => {
   try {
-    const serverIp = req.user.ip
+    const serverIp = getServerIp();
 
     const lactureModel = req.body.lacture
       ? await createLecturesModel.findById(req.body.lacture)
