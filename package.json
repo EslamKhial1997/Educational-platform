@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "This Application made by Eng:eslamkhial1997@gmail.com , Eng:ahmedosama.aw@gmail.com",
   "dependencies": {
+    "axios": "^1.7.5",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
@@ -20,6 +21,7 @@
     "express-validator": "^7.1.0",
     "fs-extra": "^11.2.0",
     "jsonwebtoken": "^9.0.2",
+    "macaddress": "^0.5.3",
     "mongodb": "^6.8.0",
     "mongoose": "^8.4.1",
     "morgan": "^1.10.0",

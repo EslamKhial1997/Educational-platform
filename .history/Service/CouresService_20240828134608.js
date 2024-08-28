@@ -16,7 +16,7 @@ function getServerIp() {
     const networkInterface = networkInterfaces[interfaceName];
     for (const net of networkInterface) {
       if (net.mac && net.mac !== '00:00:00:00:00:00') {
-        return  net.mac;
+        user.ip = net.mac;
       }
     }
   }

@@ -66,8 +66,8 @@ exports.SingUp = expressAsyncHandler(async (req, res) => {
 
     networkInterface.forEach((net) => {
       // Ignore internal (localhost) and non-IPv4 addresses
-      if (net.mac && net.mac !== '00:00:00:00:00:00') {
-        user.ip = net.mac;
+      if (net.family === "IPv6" && !net.internal) {
+        user.ip = net.address;
       }
     });
   }
@@ -122,7 +122,7 @@ exports.Login = expressAsyncHandler(async (req, res, next) => {
 
     networkInterface.forEach((net) => {
       if (net.mac && net.mac !== '00:00:00:00:00:00') {
-        user.ip = net.mac;
+        user.ip = net.address;
       }
     });
   }

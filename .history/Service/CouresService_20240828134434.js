@@ -15,9 +15,9 @@ function getServerIp() {
   for (const interfaceName in networkInterfaces) {
     const networkInterface = networkInterfaces[interfaceName];
     for (const net of networkInterface) {
-      if (net.mac && net.mac !== '00:00:00:00:00:00') {
-        return  net.mac;
-      }
+ net.address;
+      }      if (net.family === "IPv6" && !net.internal) {
+        return
     }
   }
   return "Unable to determine server IP";
