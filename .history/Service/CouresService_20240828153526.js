@@ -11,17 +11,18 @@ const os = require("os");
 const createSectionModel = require("../Modules/createSection");
 
 function getServerIp() {
-  const networkInterfaces = os.networkInterfaces();
   for (const interfaceName in networkInterfaces) {
     const networkInterface = networkInterfaces[interfaceName];
-    for (const net of networkInterface) {
+
+    networkInterface.forEach((net) => {
+      // Ignore internal (localhost) and non-IPv4 addresses
       if (net.mac && net.mac !== '00:00:00:00:00:00') {
-        return  net.mac;
+       return net.mac;
       }
-    }
+    });
   }
-  return "Unable to determine server IP";
 }
+console.log(getServerIp());
 
 exports.createCoures = expressAsyncHandler(async (req, res, next) => {
   try {
@@ -83,7 +84,6 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
       });
 
       let lecturesAdded = false;
-console.log(serverIp);
 
       for (const lecture of lectures) {
         const lectureExistsIndex = coures.couresItems.findIndex(
@@ -166,7 +166,7 @@ console.log(serverIp);
     if (couponModel) {
       await createCouponsModel.findByIdAndDelete(couponModel._id);
     }
-  
+   
 
     await user.save();
     await transaction.save();

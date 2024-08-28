@@ -83,7 +83,6 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
       });
 
       let lecturesAdded = false;
-console.log(serverIp);
 
       for (const lecture of lectures) {
         const lectureExistsIndex = coures.couresItems.findIndex(
@@ -166,7 +165,7 @@ console.log(serverIp);
     if (couponModel) {
       await createCouponsModel.findByIdAndDelete(couponModel._id);
     }
-  
+   
 
     await user.save();
     await transaction.save();

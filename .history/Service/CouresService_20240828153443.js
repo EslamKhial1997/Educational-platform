@@ -15,8 +15,8 @@ function getServerIp() {
   for (const interfaceName in networkInterfaces) {
     const networkInterface = networkInterfaces[interfaceName];
     for (const net of networkInterface) {
-      if (net.mac && net.mac !== '00:00:00:00:00:00') {
-        return  net.mac;
+      if (net.mac && net.mac !== "00:00:00:00:00:00") {
+        return net.mac;
       }
     }
   }
@@ -83,7 +83,6 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
       });
 
       let lecturesAdded = false;
-console.log(serverIp);
 
       for (const lecture of lectures) {
         const lectureExistsIndex = coures.couresItems.findIndex(
@@ -166,7 +165,7 @@ console.log(serverIp);
     if (couponModel) {
       await createCouponsModel.findByIdAndDelete(couponModel._id);
     }
-  
+   
 
     await user.save();
     await transaction.save();

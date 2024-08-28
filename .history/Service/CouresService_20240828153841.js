@@ -83,8 +83,7 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
       });
 
       let lecturesAdded = false;
-console.log(serverIp);
-
+log
       for (const lecture of lectures) {
         const lectureExistsIndex = coures.couresItems.findIndex(
           (item) => item.lacture._id.toString() === lecture._id.toString()
