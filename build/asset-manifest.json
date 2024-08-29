@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/static/css/main.be77944c.css",
-    "main.js": "/static/js/main.7dfc998a.js",
+    "main.css": "/static/css/main.85dad3f9.css",
+    "main.js": "/static/js/main.f3ffaa58.js",
+    "static/media/2.png": "/static/media/2.30f89f2896579fd5f307.png",
+    "static/media/1.png": "/static/media/1.dd8fd2e5befb9334120e.png",
+    "static/media/3.png": "/static/media/3.e901f2fbf1a05d8992bb.png",
     "static/media/404.gif": "/static/media/404.978c100e7a34158eb43c.gif",
     "static/media/1600-X-900.jpg": "/static/media/1600-X-900.155cb6f4afaedd641019.jpg",
     "static/media/900-X-1600.jpg": "/static/media/900-X-1600.52d145f1eee11f35e6f0.jpg",
     "static/media/sun.png": "/static/media/sun.9b98584f0f8abfaa128d.png",
-    "static/media/three.jpg": "/static/media/three.36578106c94d20b9c5d1.jpg",
-    "static/media/one.jpg": "/static/media/one.a66cb27a3697b4f22913.jpg",
-    "static/media/tow.jpg": "/static/media/tow.d3a7ad8515f91f3ce01d.jpg",
     "static/media/logo-copouns.png": "/static/media/logo-copouns.79c14ae0ce91f228af46.png",
     "static/media/stars.png": "/static/media/stars.ef26b606f1dd584974a8.png",
     "static/media/moon.png": "/static/media/moon.bf8caecfb3645cc15cc5.png",
@@ -18,11 +18,11 @@
     "static/media/images-removebg-preview.png": "/static/media/images-removebg-preview.f34c04b98437e5842f28.png",
     "static/media/notTransaction.webp": "/static/media/notTransaction.354309f80e0972f858bc.webp",
     "index.html": "/index.html",
-    "main.be77944c.css.map": "/static/css/main.be77944c.css.map",
-    "main.7dfc998a.js.map": "/static/js/main.7dfc998a.js.map"
+    "main.85dad3f9.css.map": "/static/css/main.85dad3f9.css.map",
+    "main.f3ffaa58.js.map": "/static/js/main.f3ffaa58.js.map"
   },
   "entrypoints": [
-    "static/css/main.be77944c.css",
-    "static/js/main.7dfc998a.js"
+    "static/css/main.85dad3f9.css",
+    "static/js/main.f3ffaa58.js"
   ]
 }

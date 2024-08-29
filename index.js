@@ -14,7 +14,7 @@ const RoutesUsers = require("./Routes/RoutesUsers");
 const RoutesTransactions = require("./Routes/RoutesTransaction");
 const RoutesClasses = require("./Routes/RoutesClasses");
 const RoutesAuth = require("./Routes/RoutesAuth");
-const RoutesTeachers = require("./Routes/RoutesTeachers"); 
+const RoutesTeachers = require("./Routes/RoutesTeachers");
 const RoutesSections = require("./Routes/RoutesSections");
 const RoutesLectures = require("./Routes/RoutesLectures");
 const RoutesCoupons = require("./Routes/RoutesCoupons");
@@ -31,8 +31,8 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Headers", "*");
   next();
 });
-const uploadsPath = path.join(__dirname, "uploads"); 
-app.use(express.static(uploadsPath)); 
+const uploadsPath = path.join(__dirname, "uploads");
+app.use(express.static(uploadsPath));
 
 app.use(express.json());
 
@@ -61,9 +61,9 @@ app.use("/api/v1/slider", RoutesSliders);
 app.use("/api/v1/gallery", RoutesGallerys);
 app.use("/api/v1/honor", RoutesHonors);
 app.use(express.static(path.join(__dirname, "build")));
-app.get('*', (req, res) => {
-  if (!req.originalUrl.startsWith('/api')) {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+app.get("*", (req, res) => {
+  if (!req.originalUrl.startsWith("/api")) {
+    res.sendFile(path.join(__dirname, "build", "index.html"));
   } else {
     res.status(404).json({ message: "API endpoint not found" });
   }
