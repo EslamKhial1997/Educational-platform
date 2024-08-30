@@ -8,7 +8,7 @@ const {
   UpdatePaidToTeacherValidation,
 } = require("../Resuble/UsersvalidatorError");
 const {
- 
+  verifyRegister,
   createUsers,
   getUsers,
   updateUser,

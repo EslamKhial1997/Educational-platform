@@ -1,10 +1,10 @@
 const { Router } = require("express");
 
 const {
-  
+  verifyRegister,
   updateLoggedUserPassword,
 } = require("../Service/UsersService");
-const { protect, allowedTo, restCodeSent } = require("../Service/AuthService");
+const { protect, allowedTo } = require("../Service/AuthService");
 const {
   createTeachers,
   UploadImageService,

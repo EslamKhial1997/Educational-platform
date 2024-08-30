@@ -4,7 +4,7 @@ const {
   
   updateLoggedUserPassword,
 } = require("../Service/UsersService");
-const { protect, allowedTo, restCodeSent } = require("../Service/AuthService");
+const { protect, allowedTo } = require("../Service/AuthService");
 const {
   createTeachers,
   UploadImageService,
@@ -43,7 +43,7 @@ Routes.route("/")
     createTeachers
   )
   .get(getTeachers);
-  Routes.post("/restCode", restCodeSent);
+  Routes.post("/restCode", restCo);
 Routes.route("/:id")
   .get(getOneUserValidator, getAllDataTeacher)
   .delete(

@@ -10,7 +10,7 @@ const {
   resendCodeVerify,
   protect,
 } = require("../Service/AuthService");
-
+const { verifyRegister } = require("../Service/UsersService");
 const { createUsersValidator } = require("../Resuble/UsersvalidatorError");
 const { uploadImage, resizeImageAuth } = require("../Utils/imagesHandler");
 

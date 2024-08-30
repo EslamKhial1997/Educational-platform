@@ -43,7 +43,22 @@ exports.createUsers = expressAsyncHandler(async (req, res) => {
     data: user,
   });
 });
-
+exports.verifyRegister = expressAsyncHandler(async (req, res, next) => {
+  const restcode = req.body.code.toString();
+  const ciphertext = crypto.createHash("sha256").update(restcode).digest("hex");
+  const user = await createUsersModel.findOne({
+    code: ciphertext,
+    codeExpires: { $gt: Date.now() },
+  });
+  if (!user) {
+    return next(new ApiError("Rest Code is Invalid Or Expired"));
+  }
+  user.userVerify = true;
+  user.code = undefined;
+  user.codeExpires = undefined;
+  await user.save();
+  res.status(200).json({ status: "success" });
+});
 exports.getUsers = factory.getAll(createUsersModel);
 exports.getUser = (model) => factory.getOne(model);
 exports.deleteUser = factory.deleteOne(createUsersModel, "admin");

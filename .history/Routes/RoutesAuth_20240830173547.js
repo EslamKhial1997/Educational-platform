@@ -10,7 +10,7 @@ const {
   resendCodeVerify,
   protect,
 } = require("../Service/AuthService");
-
+const { verifyRegister } = require("../Service/UsersService");
 const { createUsersValidator } = require("../Resuble/UsersvalidatorError");
 const { uploadImage, resizeImageAuth } = require("../Utils/imagesHandler");
 
@@ -22,7 +22,7 @@ Routes.route("/signup").post(
   resizeImageAuth("admin"),
   SingUp
 );
-
+Routes.route("/verifycode").post(verifyRegister);
 Routes.route("/resendVerifycode").post(protect, resendCodeVerify);
 Routes.route("/login").post(LoginValidator, Login);
 Routes.post("/forgetPassword", forgetPassword);
