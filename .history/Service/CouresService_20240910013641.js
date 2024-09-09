@@ -195,6 +195,8 @@ exports.updateSpecificCourseItemSeen = expressAsyncHandler(
         msg: "لايوجد كورسات ",
       });
     }
+;
+
     const itemsIndex = course.couresItems.findIndex(
       (item) => item._id.toString() === req.params.id
     );
@@ -202,14 +204,16 @@ exports.updateSpecificCourseItemSeen = expressAsyncHandler(
       const courseItem = course.couresItems[itemsIndex];
       courseItem.seen -= 1;
 
+
       if (courseItem.seen === 0 || courseItem.expires < Date.now()) {
         course.couresItems.splice(itemsIndex, 1);
+        
       } else {
         course.couresItems[itemsIndex] = courseItem;
       }
 
       await course.save(); // حفظ التحديثات
-
+      
       res.status(200).json({
         status: "success",
         msg: courseItem.seen === 0 ? "Item deleted" : "Item updated",
