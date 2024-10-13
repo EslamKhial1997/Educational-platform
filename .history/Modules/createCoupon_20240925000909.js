@@ -19,10 +19,7 @@ const createCoupons = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "Section",
     },
-    locked:{
-      type: Boolean,
-      default: false,
-    }
+    lock:f
   },
   { timestamps: true }
 );

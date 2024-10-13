@@ -8,7 +8,6 @@ const createTransactionModel = require("../Modules/createtransaction");
 const createTeachersModel = require("../Modules/createTeacher");
 const createUsersModel = require("../Modules/createUsers");
 const createSectionModel = require("../Modules/createSection");
-const { default: mongoose } = require("mongoose");
 
 exports.createCoures = expressAsyncHandler(async (req, res, next) => {
   const session = await mongoose.startSession();

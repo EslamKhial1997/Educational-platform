@@ -8,11 +8,17 @@ const createTransactionModel = require("../Modules/createtransaction");
 const createTeachersModel = require("../Modules/createTeacher");
 const createUsersModel = require("../Modules/createUsers");
 const createSectionModel = require("../Modules/createSection");
-const { default: mongoose } = require("mongoose");
 
+لا، إذا استخدمت الكود المعدل بدون إدارة المعاملات (transactions)، فإن الكوبون سيكون مُستخدمًا (used: true) حتى لو فشلت العملية في مكان آخر بالكود، مثل تحديث النقاط أو حفظ المعاملات. هذا يعني أن الكوبون سيتم تعليمه كمُستخدم ولن يتمكن أي شخص آخر من استخدامه حتى لو لم تكتمل العملية بنجاح.
+
+لحل هذه المشكلة، يجب استخدام المعاملات (transactions) في MongoDB لضمان أن جميع العمليات المرتبطة بالكوبون تتم بنجاح أو يتم إلغاء العملية بالكامل في حالة حدوث أي خطأ. المعاملات تضمن أنه إما أن يتم تنفيذ كل شيء بنجاح، أو يتم التراجع عن جميع التعديلات.
+
+الحل باستخدام معاملات MongoDB:
+javascript
+Copy code
+const session = await mongoose.startSession();
+session.startTransaction();
 exports.createCoures = expressAsyncHandler(async (req, res, next) => {
-  const session = await mongoose.startSession();
-  session.startTransaction(); // بدء المعاملة
   try {
     const serverIp = req.user.ip;
 
@@ -40,16 +46,6 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
       : price;
 
     if (req.user.point < priceAfterDiscount) {
-      await createCouponsModel.findOneAndUpdate(
-        {
-          code: req.body.coupon,
-          expires: { $gt: Date.now() },
-          locked: true, // Only find coupons that haven't expired
-        },
-        { $set: { locked: false } },
-
-        { new: true } // Return the updated document
-      );
       return next(
         res.status(500).json({
           status: "error",
@@ -133,16 +129,6 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
         });
         await coures.save();
       } else {
-        await createCouponsModel.findOneAndUpdate(
-          {
-            code: req.body.coupon,
-            expires: { $gt: Date.now() },
-            locked: true, // Only find coupons that haven't expired
-          },
-          { $set: { locked: false } },
-
-          { new: true } // Return the updated document
-        );
         return res.status(404).json({
           status: "Failure",
           msg: "المحاضره موجوده من قبل",
@@ -186,7 +172,7 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
     await user.save();
     await transaction.save();
     await teacherModel.save();
-    await session.commitTransaction();
+
     res.status(200).json({
       data: {
         coures,
@@ -194,10 +180,17 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
       },
     });
   } catch (error) {
-    await session.abortTransaction(); // إلغاء المعاملة عند حدوث خطأ
+    await createCouponsModel.findOneAndUpdate(
+      {
+        code: req.body.coupon,
+        expires: { $gt: Date.now() }, // Only find coupons that haven't expired
+      },
+      {
+        locked: false, // Set the 'locked' field to true
+      },
+      { new: true } // Return the updated document
+    );
     next(error);
-  } finally {
-    session.endSession(); // إنهاء الجلسة
   }
 });
 

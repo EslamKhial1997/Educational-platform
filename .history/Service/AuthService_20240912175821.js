@@ -62,8 +62,9 @@ exports.SingUp = expressAsyncHandler(async (req, res) => {
         user.ip = net.mac;
       }
     });
-  }
+  } 
   try {
+ 
     const token = jwt.sign({ userId: user._id }, process.env.DB_URL, {
       expiresIn: "360d",
     });

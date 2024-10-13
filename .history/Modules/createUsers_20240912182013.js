@@ -58,7 +58,7 @@ const createUsers = new mongoose.Schema(
 
     userVerify: {
       type: Boolean,
-      default: true,
+      default: t,
     },
     codeExpires: {
       type: String,
