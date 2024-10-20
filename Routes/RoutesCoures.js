@@ -17,7 +17,6 @@ Routes.use(protect);
 Routes.route("/")
   .post(allowedTo("user"), createCourseValidator, createCoures)
   .get(protect, allowedTo("user"), getCoures);
-
 Routes.route("/:id")
   .delete(deleteSpecificCourseItem)
   .put(updateSpecificCourseItemSeen);
