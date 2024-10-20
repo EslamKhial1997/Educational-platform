@@ -104,25 +104,16 @@ exports.getOne = (Model, populateOpt) =>
       }
       
       const getDocById = await query;
-  
+      
       if (getDocById) {
-        // تصفية العناصر التي تحتاج إلى الحذف
-        const itemsToDelete = getDocById.couresItems.filter(item => 
-          item.seen === 0 || item.expires < Date.now()
-        );
-  
-        // حذف العناصر من قاعدة البيانات
-        if (itemsToDelete.length > 0) {
-          getDocById.couresItems = getDocById.couresItems.filter(item => 
-            item.seen !== 0 && item.expires > Date.now()
-          );
-          
-          await getDocById.save(); // حفظ التحديثات
-        }
+        // تصفية الكورسات بناءً على الشروط المحددة
+        const filteredCoursesItems = getDocById.couresItems.filter(item => {
+          return item.seen !== 0 && item.expires > Date.now();
+        });
   
         res.status(200).json({
-          results: getDocById.couresItems.length,
-          data: getDocById,
+          results: filteredCoursesItems.length,
+          data: { ...getDocById.toObject(), couresItems: filteredCoursesItems },
         });
       } else {
         res.status(404).json({

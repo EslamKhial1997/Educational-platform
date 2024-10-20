@@ -8,12 +8,13 @@ const createTransactionModel = require("../Modules/createtransaction");
 const createTeachersModel = require("../Modules/createTeacher");
 const createUsersModel = require("../Modules/createUsers");
 const createSectionModel = require("../Modules/createSection");
-
-
+const { default: mongoose } = require("mongoose");
 
 exports.createCoures = expressAsyncHandler(async (req, res, next) => {
+  const session = await mongoose.startSession();
+  session.startTransaction(); // بدء المعاملة
   try {
-    const serverIp = req.user.ip
+    const serverIp = req.user.ip;
 
     const lactureModel = req.body.lacture
       ? await createLecturesModel.findById(req.body.lacture)
@@ -22,23 +23,38 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
       ? await createSectionModel.findById(req.body.section)
       : null;
 
-    const couponModel = await createCouponsModel.findOne({
-      code: req.body.coupon,
-      expires: { $gt: Date.now() },
-    });
+    const couponModel = await createCouponsModel.findOneAndUpdate(
+      {
+        code: req.body.coupon,
+        expires: { $gt: Date.now() },
+        locked: false, // Only find coupons that haven't expired
+      },
+      { $set: { locked: true } },
+
+      { new: true } // Return the updated document
+    );
 
     const price = lactureModel ? lactureModel.price : sectionModel.price;
-     const priceAfterDiscount = couponModel
+    const priceAfterDiscount = couponModel
       ? (price - (price * couponModel.discount) / 100).toFixed(0)
       : price;
 
-        if (req.user.point < priceAfterDiscount) {
+    if (req.user.point < priceAfterDiscount) {
+      await createCouponsModel.findOneAndUpdate(
+        {
+          code: req.body.coupon,
+          expires: { $gt: Date.now() },
+          locked: true, // Only find coupons that haven't expired
+        },
+        { $set: { locked: false } },
 
+        { new: true } // Return the updated document
+      );
       return next(
-        new ApiError(
-           `سعر المحاضره ${price} اكبر من رصيدك ${req.user.point}`,
-          500
-        )
+        res.status(500).json({
+          status: "error",
+          msg: `سعر المحاضره ${price} اكبر من رصيدك ${req.user.point}`,
+        })
       );
     }
 
@@ -79,7 +95,7 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
         const lectureExistsIndex = coures.couresItems.findIndex(
           (item) => item.lacture._id.toString() === lecture._id.toString()
         );
- 
+
         if (lectureExistsIndex === -1) {
           coures.couresItems.push({
             lacture: lecture,
@@ -117,6 +133,16 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
         });
         await coures.save();
       } else {
+        await createCouponsModel.findOneAndUpdate(
+          {
+            code: req.body.coupon,
+            expires: { $gt: Date.now() },
+            locked: true, // Only find coupons that haven't expired
+          },
+          { $set: { locked: false } },
+
+          { new: true } // Return the updated document
+        );
         return res.status(404).json({
           status: "Failure",
           msg: "المحاضره موجوده من قبل",
@@ -156,12 +182,11 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
     if (couponModel) {
       await createCouponsModel.findByIdAndDelete(couponModel._id);
     }
-  
 
     await user.save();
     await transaction.save();
     await teacherModel.save();
-
+    await session.commitTransaction();
     res.status(200).json({
       data: {
         coures,
@@ -169,10 +194,12 @@ exports.createCoures = expressAsyncHandler(async (req, res, next) => {
       },
     });
   } catch (error) {
+    await session.abortTransaction(); // إلغاء المعاملة عند حدوث خطأ
     next(error);
+  } finally {
+    session.endSession(); // إنهاء الجلسة
   }
 });
-
 
 exports.getCoures = factory.getOneCourse(createCouresModel);
 exports.deleteCourses = factory.deleteOne(createCouresModel);
@@ -195,9 +222,11 @@ exports.updateSpecificCourseItemSeen = expressAsyncHandler(
   async (req, res, next) => {
     const course = await createCouresModel.findOne({ user: req.user._id });
     if (!course) {
-      return next(new ApiError("There is no course for this user"));
+      res.status(404).json({
+        status: "error",
+        msg: "لايوجد كورسات ",
+      });
     }
-
     const itemsIndex = course.couresItems.findIndex(
       (item) => item._id.toString() === req.params.id
     );
@@ -205,16 +234,20 @@ exports.updateSpecificCourseItemSeen = expressAsyncHandler(
       const courseItem = course.couresItems[itemsIndex];
       courseItem.seen -= 1;
 
-      if (courseItem.seen === 0 || courseItem.expires < Date.now() && courseItem.expires) {
+      if (
+        courseItem.seen === 0 ||
+        (courseItem.expires < Date.now() && courseItem.expires)
+      ) {
         course.couresItems.splice(itemsIndex, 1);
       } else {
         course.couresItems[itemsIndex] = courseItem;
       }
 
       await course.save(); // حفظ التحديثات
+
       res.status(200).json({
         status: "success",
-        message: courseItem.seen === 0 ? "Item deleted" : "Item updated",
+        msg: courseItem.seen === 0 ? "Item deleted" : "Item updated",
         data: course,
       });
     } else {

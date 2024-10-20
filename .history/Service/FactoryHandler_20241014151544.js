@@ -95,43 +95,21 @@ exports.getOne = (Model, populateOpt) =>
       );
     res.status(200).json({ data: getDocById });
   });
-  exports.getOneCourse = (Model, populateOpt) =>
-    expressAsyncHandler(async (req, res, next) => {
-      let query = Model.findOne({ user: req.user.id });
-      
-      if (populateOpt) {
-        query = query.populate(populateOpt);
-      }
-      
-      const getDocById = await query;
-  
-      if (getDocById) {
-        // تصفية العناصر التي تحتاج إلى الحذف
-        const itemsToDelete = getDocById.couresItems.filter(item => 
-          item.seen === 0 || item.expires < Date.now()
-        );
-  
-        // حذف العناصر من قاعدة البيانات
-        if (itemsToDelete.length > 0) {
-          getDocById.couresItems = getDocById.couresItems.filter(item => 
-            item.seen !== 0 && item.expires > Date.now()
-          );
-          
-          await getDocById.save(); // حفظ التحديثات
-        }
-  
-        res.status(200).json({
-          results: getDocById.couresItems.length,
-          data: getDocById,
-        });
-      } else {
-        res.status(404).json({
-          status: "error",
-          msg: "لا يوجد كورس للمستخدم",
-        });
-      }
+exports.getOneCourse = (Model, populateOpt) =>
+  expressAsyncHandler(async (req, res, next) => {
+    let query = Model.findOne({ user: req.user.id });
+console.log(query.couresItems);
+
+    if (populateOpt) {
+      query = query.populate(populateOpt);
+    }
+    const getDocById = await query;
+
+    res.status(201).json({
+      results: getDocById ? getDocById.couresItems.length : 0,
+      data: getDocById,
     });
-  
+  });
 
 exports.updateOne = (Model, filePath) =>
   expressAsyncHandler(async (req, res, next) => {
